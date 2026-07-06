@@ -26,23 +26,26 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
 - ✅ `npx eslint .` 클린
 - ✅ `npm run build` 프로덕션 빌드 성공
 - ✅ 로컬 vite 서버로 모든 스크린 모듈이 200으로 트랜스폼되는 것 확인 (curl)
-- ❌ **실제 브라우저에서 픽셀 단위 시각 검증은 안 했음.** 이 세션의 미리보기 도구가
-  futsal-app 프로젝트에 스코프돼 있어서 gym-routine을 못 열었음. 다음 세션에서
-  `npm run dev` 띄우고 `docs/design-handoff/`의 스크린샷/원본 프로토타입과
-  나란히 비교 검증 필요.
+- ✅ **브라우저 시각 검증 완료** (2026-07-06). Playwright + 로컬 Chromium으로
+  `npm run dev` 띄우고 6개 화면(Home/Explore/RoutineDetail/Record/Profile/Curator)
+  전부 실제 클릭 내비게이션으로 스크린샷 촬영, 콘솔 에러 없음(폰트 CDN 차단 제외)
+  확인. 레이아웃/색상/한글 텍스트/데이터 모두 의도대로 렌더링됨.
+  - ⚠️ 원본 `.dc.html` 프로토타입은 이 샌드박스에서 직접 열어 나란히 비교하지
+    못함 — 그 프로토타입 런타임이 `unpkg.com`(React CDN)과 Google Fonts CDN을
+    필요로 하는데, 이 환경의 네트워크 정책이 두 도메인 다 차단함
+    (`$HTTPS_PROXY/__agentproxy/status`로 확인). 실물 비교가 필요하면 네트워크
+    제약 없는 환경(로컬 PC 등)에서 두 파일을 나란히 열어야 함.
 
 ## 다음에 할 일 (우선순위 순)
 
-1. **브라우저 시각 검증** — `npm run dev` → 6개 화면 전부 눌러보며 클로드 디자인
-   프로토타입과 spacing/색상 비교. 특히 Record 화면 active 카드, Curator 화면.
-2. **Explore 카테고리 칩** — 프로토타입처럼 지금도 장식용(클릭 안 됨). 실제로
+1. **Explore 카테고리 칩** — 프로토타입처럼 지금도 장식용(클릭 안 됨). 실제로
    유형별 필터링 기능을 붙일지 결정.
-3. **Supabase 연동** — 지금은 전부 `mockData.ts` 하드코딩. `C:\Users\dbwls\.claude\plans\harmonic-yawning-stream.md`에
+2. **Supabase 연동** — 지금은 전부 `mockData.ts` 하드코딩. `C:\Users\dbwls\.claude\plans\harmonic-yawning-stream.md`에
    설계된 스키마(routines/exercises/workouts 등)를 아직 마이그레이션 안 함.
    로컬 `supabase start` → 마이그레이션 작성 → `mockData` 대신 실제 쿼리로 교체.
-4. **PWA 아이콘** — `vite.config.ts`의 manifest에 아이콘 파일 경로가 없음
+3. **PWA 아이콘** — `vite.config.ts`의 manifest에 아이콘 파일 경로가 없음
    (futsal-app 것 그대로 안 가져옴). 아이콘 세트 준비 필요.
-5. **인증** — 로그인 없음. `준경`/아바타 이니셜이 하드코딩.
+4. **인증** — 로그인 없음. `준경`/아바타 이니셜이 하드코딩.
 
 ## 재개 방법
 
