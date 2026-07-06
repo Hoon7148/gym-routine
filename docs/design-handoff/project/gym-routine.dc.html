@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { background: #050506; font-family: 'Archivo', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  input { font-family: 'Archivo', sans-serif; outline: none; }
+  button { font-family: 'Archivo', sans-serif; }
+  a { color: #e5484d; } a:hover { color: #ff8a8f; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-feature-settings: 'tnum'; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  .scr { animation: scrIn .22s ease; }
+  @keyframes scrIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .app-scroll, .hscroll { scrollbar-width: none; }
+  input::placeholder { color: #55555c; }
+  image-slot { display:block; }
+</style>
+</helmet>
+
+<div style="min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:32px 16px;background:#050506;">
+  <div style="--accent:{{ accentColor }};--card:{{ cardColor }};width:375px;height:812px;background:#0a0a0b;border-radius:44px;border:1px solid #202024;overflow:hidden;position:relative;display:flex;flex-direction:column;box-shadow:0 0 0 1px #0a0a0b;">
+
+    <!-- status bar -->
+    <div style="height:52px;flex:none;display:flex;align-items:flex-end;justify-content:space-between;padding:0 26px 8px;">
+      <span class="mono" style="font-size:14px;font-weight:700;color:#f4f4f5;letter-spacing:-.5px;">9:41</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div style="display:flex;align-items:flex-end;gap:2px;height:11px;">
+          <span style="width:3px;height:5px;background:#f4f4f5;border-radius:1px;"></span>
+          <span style="width:3px;height:7px;background:#f4f4f5;border-radius:1px;"></span>
+          <span style="width:3px;height:9px;background:#f4f4f5;border-radius:1px;"></span>
+          <span style="width:3px;height:11px;background:#f4f4f5;border-radius:1px;"></span>
+        </div>
+        <span style="width:22px;height:11px;border:1.5px solid #f4f4f5;border-radius:3px;display:inline-block;position:relative;">
+          <span style="position:absolute;inset:1.5px;right:5px;background:#f4f4f5;border-radius:1px;"></span>
+        </span>
+      </div>
+    </div>
+
+    <!-- SCREEN AREA -->
+    <div class="app-scroll" style="flex:1;overflow-y:auto;overflow-x:hidden;">
+
+      <!-- ============ HOME ============ -->
+      <sc-if value="{{ onHome }}" hint-placeholder-val="{{ true }}">
+        <div class="scr" style="padding:8px 0 120px;">
+          <!-- app bar -->
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;padding:0 20px;margin-bottom:16px;">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:#8a8a90;letter-spacing:.4px;text-transform:uppercase;">수요일 · 7월 7일</div>
+              <div style="font-size:27px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;line-height:1.1;margin-top:2px;">오늘의 세션</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+                <span style="font-size:13px;font-weight:700;color:#f4f4f5;">푸시 데이</span>
+                <span style="width:3px;height:3px;border-radius:50%;background:#5a5a60;"></span>
+                <span style="font-size:13px;color:#8a8a90;">약 60분</span>
+              </div>
+            </div>
+            <div style="width:42px;height:42px;border-radius:50%;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-weight:700;color:#8a8a90;font-size:15px;">준</div>
+          </div>
+
+          <!-- muscle target cards (horizontal) -->
+          <div class="hscroll" style="display:flex;gap:12px;overflow-x:auto;padding:0 20px 4px;margin-bottom:20px;">
+            <sc-for list="{{ muscleCards }}" as="m" hint-placeholder-count="3">
+              <div style="flex:none;width:150px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:14px;">
+                <div style="height:74px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+                  <svg width="90" height="74" viewBox="0 0 120 100" fill="none">
+                    <path d="M34 22 C22 22 16 32 18 44 C28 46 38 42 40 32 C40 26 38 22 34 22 Z" fill="{{ m.deltFill }}"/>
+                    <path d="M86 22 C98 22 104 32 102 44 C92 46 82 42 80 32 C80 26 82 22 86 22 Z" fill="{{ m.deltFill }}"/>
+                    <path d="M44 34 C55 32 58 37 58 46 C58 56 52 60 45 58 C39 56 37 47 39 41 C40 37 41 35 44 34 Z" fill="{{ m.pecFill }}"/>
+                    <path d="M76 34 C65 32 62 37 62 46 C62 56 68 60 75 58 C81 56 83 47 81 41 C80 37 79 35 76 34 Z" fill="{{ m.pecFill }}"/>
+                    <rect x="50" y="62" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <rect x="61.5" y="62" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <rect x="50" y="73" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <rect x="61.5" y="73" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <rect x="50" y="84" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <rect x="61.5" y="84" width="8.5" height="8.5" rx="2.5" fill="{{ m.abFill }}"/>
+                    <path d="M20 48 C14 50 12 62 16 76 C22 76 28 72 28 60 C28 52 26 48 20 48 Z" fill="{{ m.armFill }}"/>
+                    <path d="M100 48 C106 50 108 62 104 76 C98 76 92 72 92 60 C92 52 94 48 100 48 Z" fill="{{ m.armFill }}"/>
+                  </svg>
+                </div>
+                <div style="font-size:16px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;">{{ m.name }}</div>
+                <div style="display:flex;align-items:center;gap:5px;margin-top:5px;">
+                  <span style="color:#2fbf71;font-size:12px;">↑</span>
+                  <span style="font-size:12px;font-weight:600;color:#2fbf71;">성장 중</span>
+                </div>
+                <div style="position:relative;height:4px;border-radius:2px;background:#2a2a2e;margin-top:12px;">
+                  <span style="position:absolute;left:0;top:0;bottom:0;border-radius:2px;background:var(--accent,#e5484d);width:{{ m.pct }};"></span>
+                </div>
+                <div style="display:flex;justify-content:space-between;margin-top:6px;">
+                  <span class="mono" style="font-size:10px;color:#5a5a60;">0</span>
+                  <span class="mono" style="font-size:10px;font-weight:700;color:var(--accent,#e5484d);">{{ m.delta }}</span>
+                  <span class="mono" style="font-size:10px;color:#5a5a60;">{{ m.max }}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="padding:0 20px;">
+            <!-- hero recommended routine -->
+            <div style="border-radius:20px;overflow:hidden;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);margin-bottom:14px;">
+              <div style="position:relative;">
+                <image-slot id="home-hero" style="width:100%;height:150px;" shape="rect" placeholder="히어로 이미지"></image-slot>
+                <span style="position:absolute;top:12px;left:12px;font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#ffffff;background:var(--accent,#e5484d);padding:5px 9px;border-radius:7px;">오늘의 추천</span>
+              </div>
+              <div style="padding:16px;">
+                <div style="font-size:22px;font-weight:800;color:#f4f4f5;letter-spacing:-.6px;line-height:1.15;">푸시 데이 — 상체 볼륨</div>
+                <div style="display:flex;align-items:center;gap:6px;margin-top:5px;">
+                  <span style="width:5px;height:5px;border-radius:50%;background:#2fbf71;"></span>
+                  <span style="font-size:13px;color:#8a8a90;">CBUM 유튜브 루틴 · 큐레이터 검증</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:16px;margin-top:14px;">
+                  <div><span class="mono" style="font-size:19px;font-weight:800;color:#f4f4f5;">8</span><span style="font-size:12px;color:#8a8a90;"> 종목</span></div>
+                  <div style="width:1px;height:16px;background:rgba(255,255,255,.1);"></div>
+                  <div><span class="mono" style="font-size:19px;font-weight:800;color:#f4f4f5;">62</span><span style="font-size:12px;color:#8a8a90;"> 분</span></div>
+                  <div style="width:1px;height:16px;background:rgba(255,255,255,.1);"></div>
+                  <div><span class="mono" style="font-size:19px;font-weight:800;color:#f4f4f5;">1.2k</span><span style="font-size:12px;color:#8a8a90;"> 진행중</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- exercise list w/ timestamp deeplinks (sets/weight intentionally hidden) -->
+            <sc-for list="{{ homeExercises }}" as="d" hint-placeholder-count="5">
+              <div onClick="{{ openDetail }}" style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;">
+                <span class="mono" style="font-size:14px;font-weight:700;color:#3a3a40;width:20px;flex:none;">{{ d.num }}</span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:14.5px;font-weight:700;color:#f4f4f5;letter-spacing:-.2px;">{{ d.name }}</div>
+                  <div style="font-size:12px;color:#8a8a90;margin-top:1px;">{{ d.tag }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:5px;background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.25);border-radius:9px;padding:6px 9px;flex:none;">
+                  <span style="width:0;height:0;border-left:6px solid var(--accent,#e5484d);border-top:4px solid transparent;border-bottom:4px solid transparent;"></span>
+                  <span class="mono" style="font-size:12px;font-weight:700;color:var(--accent,#e5484d);">{{ d.time }}</span>
+                </div>
+              </div>
+            </sc-for>
+
+            <div style="display:flex;gap:10px;margin-top:18px;">
+              <button onClick="{{ openDetail }}" style="flex:none;width:52px;height:52px;border-radius:14px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.1);color:#f4f4f5;font-size:20px;cursor:pointer;">≣</button>
+              <button onClick="{{ startRecord }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent,#e5484d);color:#ffffff;border:none;border-radius:14px;padding:16px;font-size:15.5px;font-weight:800;cursor:pointer;">
+                <span style="width:0;height:0;border-left:9px solid #ffffff;border-top:6px solid transparent;border-bottom:6px solid transparent;"></span>
+                운동 시작
+              </button>
+            </div>
+
+            <!-- personal nudge -->
+            <div style="display:flex;align-items:center;gap:12px;background:var(--card,#161618);border:1px solid rgba(242,193,78,.22);border-radius:14px;padding:13px 15px;margin:22px 0;">
+              <span style="width:8px;height:8px;border-radius:50%;background:#f2c14e;flex:none;box-shadow:0 0 0 4px rgba(242,193,78,.12);"></span>
+              <div style="flex:1;">
+                <div style="font-size:13.5px;font-weight:600;color:#f4f4f5;">등 운동을 <span style="color:#f2c14e;">3일째</span> 안 했어요</div>
+                <div style="font-size:12px;color:#8a8a90;margin-top:1px;">풀 데이 루틴을 추가할까요?</div>
+              </div>
+              <span style="font-size:12px;font-weight:700;color:#f2c14e;">추가</span>
+            </div>
+
+            <!-- warm/cold toggle -->
+            <div style="display:flex;gap:3px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:11px;padding:3px;margin-bottom:16px;">
+              <button onClick="{{ setWarm }}" style="{{ warmStyle }}">🔥 오늘 인기</button>
+              <button onClick="{{ setCold }}" style="{{ coldStyle }}">콜드스타트</button>
+            </div>
+
+            <!-- warm content -->
+            <sc-if value="{{ notCold }}" hint-placeholder-val="{{ true }}">
+              <div>
+                <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;">
+                  <div style="font-size:16px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;">오늘 인기 루틴</div>
+                  <span style="font-size:12px;color:#8a8a90;">전체 →</span>
+                </div>
+                <sc-for list="{{ trendRoutines }}" as="t" hint-placeholder-count="3">
+                  <div onClick="{{ t.onOpen }}" style="display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;">
+                    <span class="mono" style="font-size:18px;font-weight:800;color:#2a2a2e;width:22px;">{{ t.rank }}</span>
+                    <image-slot id="{{ t.slotId }}" style="width:44px;height:44px;" shape="rounded" radius="11" placeholder=""></image-slot>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:14.5px;font-weight:700;color:#f4f4f5;">{{ t.name }}</div>
+                      <div style="font-size:12px;color:#8a8a90;margin-top:2px;">{{ t.meta }}</div>
+                    </div>
+                    <div style="text-align:right;">
+                      <div class="mono" style="font-size:14px;font-weight:800;color:var(--accent,#e5484d);">{{ t.count }}</div>
+                      <div style="font-size:10px;color:#5a5a60;">진행중</div>
+                    </div>
+                  </div>
+                </sc-for>
+                <div style="font-size:16px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;margin:22px 0 12px;">트렌딩 종목</div>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                  <sc-for list="{{ trendExercises }}" as="e" hint-placeholder-count="6">
+                    <div style="display:flex;align-items:center;gap:7px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:9px 12px;">
+                      <span style="font-size:13px;font-weight:600;color:#f4f4f5;">{{ e.name }}</span>
+                      <span class="mono" style="font-size:12px;font-weight:700;color:var(--accent,#e5484d);">{{ e.count }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- cold start fallback -->
+            <sc-if value="{{ cold }}" hint-placeholder-val="{{ false }}">
+              <div>
+                <div style="display:flex;align-items:center;gap:11px;background:#131315;border:1px dashed rgba(255,255,255,.14);border-radius:14px;padding:13px 15px;margin-bottom:18px;">
+                  <span style="width:8px;height:8px;border-radius:50%;background:#5a5a60;flex:none;"></span>
+                  <div style="font-size:12.5px;color:#8a8a90;line-height:1.4;">오늘 트렌딩 데이터를 모으는 중이에요.<br>그동안 <span style="color:#f4f4f5;font-weight:600;">큐레이터 픽</span>을 먼저 보여드릴게요.</div>
+                </div>
+                <div style="font-size:16px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;margin-bottom:12px;">큐레이터 픽</div>
+                <sc-for list="{{ curatorPicks }}" as="c" hint-placeholder-count="3">
+                  <div onClick="{{ c.onOpen }}" style="display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;">
+                    <image-slot id="{{ c.slotId }}" style="width:44px;height:44px;" shape="rounded" radius="11" placeholder=""></image-slot>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:14.5px;font-weight:700;color:#f4f4f5;">{{ c.name }}</div>
+                      <div style="display:flex;align-items:center;gap:6px;margin-top:3px;">
+                        <span style="width:5px;height:5px;border-radius:50%;background:#2fbf71;"></span>
+                        <span style="font-size:12px;color:#8a8a90;">{{ c.curator }} 검증 · {{ c.meta }}</span>
+                      </div>
+                    </div>
+                    <span style="color:#5a5a60;">›</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ EXPLORE ============ -->
+      <sc-if value="{{ onExplore }}" hint-placeholder-val="{{ false }}">
+        <div class="scr" style="padding:8px 20px 120px;">
+          <div style="font-size:27px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;margin-bottom:4px;">탐색</div>
+          <div style="font-size:13px;color:#8a8a90;margin-bottom:16px;">부위를 눌러 루틴을 찾아보세요</div>
+
+          <!-- body map -->
+          <div style="position:relative;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:20px;height:330px;overflow:hidden;margin-bottom:18px;">
+            <svg viewBox="0 0 200 420" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="position:absolute;inset:0;">
+              <circle cx="100" cy="40" r="24" fill="#2a2a2e"/>
+              <rect x="92" y="62" width="16" height="12" rx="4" fill="#2a2a2e"/>
+              <path d="M62 74 Q100 66 138 74 L130 190 Q100 200 70 190 Z" fill="{{ figTorso }}"/>
+              <rect x="42" y="78" width="18" height="98" rx="9" fill="{{ figArms }}" transform="rotate(6 51 127)"/>
+              <rect x="140" y="78" width="18" height="98" rx="9" fill="{{ figArms }}" transform="rotate(-6 149 127)"/>
+              <rect x="74" y="192" width="22" height="130" rx="11" fill="{{ figLegs }}"/>
+              <rect x="104" y="192" width="22" height="130" rx="11" fill="{{ figLegs }}"/>
+            </svg>
+            <sc-for list="{{ bodyTags }}" as="p" hint-placeholder-count="6">
+              <button onClick="{{ p.onClick }}" style="position:absolute;top:{{ p.top }};left:{{ p.left }};display:flex;align-items:center;gap:5px;border:none;border-radius:20px;padding:6px 11px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;background:{{ p.bg }};color:{{ p.fg }};">
+                {{ p.name }}
+                <span style="font-size:11px;">›</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <!-- category chips -->
+          <div style="font-size:13px;font-weight:700;color:#8a8a90;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;">유형별</div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:22px;">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <div style="width:60px;height:60px;border-radius:18px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="2" y="10.5" width="4" height="6" rx="1" fill="#c8c8cc"/><rect x="6" y="9" width="3" height="9" rx="1" fill="#c8c8cc"/><rect x="9" y="11" width="6" height="5" rx="1" fill="#c8c8cc"/><rect x="15" y="9" width="3" height="9" rx="1" fill="#c8c8cc"/><rect x="18" y="10.5" width="4" height="6" rx="1" fill="#c8c8cc"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:#c8c8cc;">푸시</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <div style="width:60px;height:60px;border-radius:18px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><line x1="3" y1="4" x2="21" y2="4" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round"/><path d="M8 4v3.5M16 4v3.5" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round"/><path d="M7 14 5 8M17 14l2-6" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 8 12 20l4-12" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:#c8c8cc;">풀</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <div style="width:60px;height:60px;border-radius:18px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="4" r="2.2" fill="#c8c8cc"/><path d="M12 6.5v6l-4 3v6M12 12.5l4 3v6" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:#c8c8cc;">레그</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <div style="width:60px;height:60px;border-radius:18px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="4" r="2.2" fill="#c8c8cc"/><path d="M12 6.5v8M5 9.5l7 2 7-2M8 21l4-6.5 4 6.5" stroke="#c8c8cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <span style="font-size:12px;font-weight:600;color:#c8c8cc;">전신</span>
+            </div>
+          </div>
+
+          <!-- filtered popular routines -->
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-size:16px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;">{{ exploreTitle }} 인기 루틴</div>
+            <span style="font-size:12px;color:#8a8a90;">{{ exploreCount }}개</span>
+          </div>
+          <sc-for list="{{ exploreRoutines }}" as="r" hint-placeholder-count="3">
+            <div onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:13px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px;margin-bottom:10px;cursor:pointer;">
+              <image-slot id="{{ r.slotId }}" style="width:60px;height:60px;" shape="rounded" radius="13" placeholder=""></image-slot>
+              <div style="flex:1;min-width:0;">
+                <div style="font-size:15px;font-weight:700;color:#f4f4f5;letter-spacing:-.2px;">{{ r.name }}</div>
+                <div style="font-size:12px;color:#8a8a90;margin-top:3px;">{{ r.meta }}</div>
+              </div>
+              <div style="width:36px;height:36px;border-radius:50%;background:var(--accent,#e5484d);display:flex;align-items:center;justify-content:center;flex:none;">
+                <span style="width:0;height:0;border-left:9px solid #ffffff;border-top:6px solid transparent;border-bottom:6px solid transparent;margin-left:2px;"></span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ============ ROUTINE DETAIL ============ -->
+      <sc-if value="{{ onDetail }}" hint-placeholder-val="{{ false }}">
+        <div class="scr" style="padding:0 0 130px;">
+          <div style="display:flex;align-items:center;gap:14px;padding:8px 20px 14px;">
+            <button onClick="{{ goHome }}" style="width:38px;height:38px;border-radius:11px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);color:#f4f4f5;font-size:18px;cursor:pointer;">←</button>
+            <span style="font-size:13px;font-weight:600;color:#8a8a90;">루틴 상세</span>
+          </div>
+          <div style="padding:0 20px;">
+            <span style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#2fbf71;background:rgba(47,191,113,.1);padding:5px 9px;border-radius:7px;">✓ 큐레이터 검증</span>
+            <div style="font-size:27px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;line-height:1.1;margin:12px 0 4px;">푸시 데이 — 상체 볼륨</div>
+            <div style="font-size:13px;color:#8a8a90;">Chris Bumstead · 오프시즌 루틴</div>
+            <div style="display:flex;align-items:center;gap:18px;margin-top:16px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.07);">
+              <div><span class="mono" style="font-size:20px;font-weight:800;color:#f4f4f5;">8</span><span style="font-size:12px;color:#8a8a90;"> 종목</span></div>
+              <div><span class="mono" style="font-size:20px;font-weight:800;color:#f4f4f5;">62</span><span style="font-size:12px;color:#8a8a90;"> 분</span></div>
+              <div><span class="mono" style="font-size:20px;font-weight:800;color:#f4f4f5;">1.2k</span><span style="font-size:12px;color:#8a8a90;"> 명 진행</span></div>
+            </div>
+            <div style="font-size:11.5px;color:#5a5a60;line-height:1.5;margin:14px 0 4px;">세트·무게는 직접 설정 — 순서와 구성만 제공합니다.</div>
+            <sc-for list="{{ detailList }}" as="d" hint-placeholder-count="8">
+              <div style="display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.06);">
+                <span class="mono" style="font-size:15px;font-weight:700;color:#3a3a40;width:24px;flex:none;">{{ d.num }}</span>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:15px;font-weight:700;color:#f4f4f5;letter-spacing:-.2px;">{{ d.name }}</div>
+                  <div style="font-size:12px;color:#8a8a90;margin-top:2px;">{{ d.tag }}</div>
+                </div>
+                <button onClick="{{ d.onPlay }}" style="display:flex;align-items:center;gap:6px;background:rgba(229,72,77,.12);border:1px solid rgba(229,72,77,.25);border-radius:9px;padding:7px 10px;cursor:pointer;flex:none;">
+                  <span style="width:0;height:0;border-left:7px solid var(--accent,#e5484d);border-top:4.5px solid transparent;border-bottom:4.5px solid transparent;"></span>
+                  <span class="mono" style="font-size:12.5px;font-weight:700;color:var(--accent,#e5484d);">{{ d.time }}</span>
+                </button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 30px;background:linear-gradient(to top,#0a0a0b 62%,transparent);">
+          <button onClick="{{ startRecord }}" style="width:100%;background:var(--accent,#e5484d);color:#ffffff;border:none;border-radius:14px;padding:16px;font-size:15.5px;font-weight:800;cursor:pointer;">이 루틴으로 기록 시작 →</button>
+        </div>
+      </sc-if>
+
+      <!-- ============ RECORD ============ -->
+      <sc-if value="{{ onRecord }}" hint-placeholder-val="{{ false }}">
+        <div class="scr" style="padding:8px 20px 120px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div style="display:flex;align-items:baseline;gap:8px;">
+              <span style="font-size:18px;font-weight:800;color:#f4f4f5;letter-spacing:-.4px;">7월 7일</span>
+              <span style="font-size:12px;color:#8a8a90;">푸시 데이</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span class="mono" style="font-size:11px;font-weight:700;color:#8a8a90;background:var(--card,#161618);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:5px 9px;">kg</span>
+              <div class="mono" style="font-size:15px;font-weight:800;color:#2fbf71;">{{ doneCount }}<span style="color:#3a3a40;">/{{ totalCount }}</span></div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <sc-for list="{{ records }}" as="r" hint-placeholder-count="8">
+              <div>
+                <!-- DONE: green strikethrough, collapsed -->
+                <sc-if value="{{ r.isDone }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ r.onReopen }}" style="display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(47,191,113,.06);border:1px solid rgba(47,191,113,.18);border-radius:13px;cursor:pointer;">
+                    <span style="width:20px;height:20px;border-radius:50%;background:#2fbf71;color:#08120b;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:none;">✓</span>
+                    <span style="flex:1;font-size:13.5px;font-weight:600;color:#2fbf71;text-decoration:line-through;text-decoration-color:rgba(47,191,113,.5);">{{ r.name }}</span>
+                    <span class="mono" style="font-size:12.5px;font-weight:700;color:#6fd39e;">{{ r.summary }}</span>
+                  </div>
+                </sc-if>
+
+                <!-- ACTIVE: expanded set-log (image 2 style) -->
+                <sc-if value="{{ r.isActive }}" hint-placeholder-val="{{ true }}">
+                  <div style="background:var(--card,#161618);border:1px solid rgba(255,255,255,.1);border-radius:16px;overflow:hidden;">
+                    <div style="display:flex;align-items:flex-start;gap:10px;padding:14px 15px 12px;">
+                      <span style="width:4px;align-self:stretch;border-radius:3px;background:var(--accent,#e5484d);flex:none;"></span>
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:18px;font-weight:800;color:#f4f4f5;letter-spacing:-.4px;line-height:1.15;">{{ r.name }}</div>
+                        <div style="font-size:11.5px;color:#8a8a90;margin-top:2px;">{{ r.subtitle }}</div>
+                      </div>
+                      <button style="flex:none;width:30px;height:30px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);border-radius:9px;color:#8a8a90;font-size:12px;cursor:pointer;">⧉</button>
+                      <button class="mono" style="flex:none;width:38px;height:30px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);border-radius:9px;color:#8a8a90;font-size:10px;cursor:pointer;">3:00</button>
+                    </div>
+                    <!-- stat cards -->
+                    <div style="display:flex;gap:8px;padding:0 15px 12px;">
+                      <div style="flex:1.2;background:#1c1c1f;border:1px solid rgba(255,255,255,.06);border-radius:13px;padding:11px 12px;">
+                        <div style="font-size:10.5px;color:#8a8a90;line-height:1.15;margin-bottom:8px;">총 볼륨</div>
+                        <div style="display:flex;align-items:baseline;gap:3px;"><span class="mono" style="font-size:22px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;">{{ r.volume }}</span><span style="font-size:11px;color:#8a8a90;">kg</span></div>
+                      </div>
+                      <div style="flex:1.2;background:#1c1c1f;border:1px solid rgba(255,255,255,.06);border-radius:13px;padding:11px 12px;">
+                        <div style="font-size:10.5px;color:#8a8a90;line-height:1.15;margin-bottom:8px;">최대 1RM</div>
+                        <div style="display:flex;align-items:baseline;gap:3px;"><span class="mono" style="font-size:22px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;">{{ r.max1rm }}</span><span style="font-size:11px;color:#8a8a90;">kg</span></div>
+                      </div>
+                      <div style="flex:1;background:#1c1c1f;border:1px solid rgba(255,255,255,.06);border-radius:13px;padding:11px 12px;">
+                        <div style="font-size:10.5px;color:#8a8a90;line-height:1.15;margin-bottom:8px;">세트</div>
+                        <div style="display:flex;align-items:baseline;gap:3px;"><span class="mono" style="font-size:22px;font-weight:800;color:#f4f4f5;letter-spacing:-1px;">{{ r.setCount }}</span></div>
+                      </div>
+                    </div>
+                    <!-- set rows -->
+                    <div style="background:#131315;border-top:1px solid rgba(255,255,255,.06);padding:6px 15px 10px;">
+                      <sc-for list="{{ r.sets }}" as="s" hint-placeholder-count="3">
+                        <div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+                          <span class="mono" style="font-size:13px;font-weight:700;color:#5a5a60;width:16px;flex:none;">{{ s.n }}</span>
+                          <span class="mono" style="flex:1;font-size:17px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;">{{ s.wr }}</span>
+                          <span class="mono" style="font-size:11px;font-weight:600;color:#8a8a90;">1RM {{ s.rm }}</span>
+                          <span style="font-size:13px;color:#5a5a60;">✎</span>
+                        </div>
+                      </sc-for>
+                      <!-- tap to add (prefilled placeholder = last session) -->
+                      <div onClick="{{ r.onAdd }}" style="display:flex;align-items:center;gap:12px;padding:11px 0 4px;cursor:pointer;">
+                        <span class="mono" style="font-size:13px;font-weight:700;color:#3a3a40;width:16px;flex:none;">+</span>
+                        <span class="mono" style="flex:1;font-size:16px;font-weight:700;color:#55555c;">{{ r.placeholder }}</span>
+                        <span style="font-size:11px;font-weight:700;color:var(--accent,#e5484d);">탭하여 추가</span>
+                      </div>
+                    </div>
+                    <div style="padding:12px 15px;">
+                      <button onClick="{{ r.onComplete }}" style="width:100%;background:var(--accent,#e5484d);color:#ffffff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:800;cursor:pointer;">종목 완료 ✓</button>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <!-- TODO: compact upcoming -->
+                <sc-if value="{{ r.isTodo }}" hint-placeholder-val="{{ false }}">
+                  <div onClick="{{ r.onStart }}" style="display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid rgba(255,255,255,.07);border-radius:13px;cursor:pointer;">
+                    <span class="mono" style="font-size:13px;font-weight:700;color:#3a3a40;width:16px;flex:none;">{{ r.num }}</span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:14px;font-weight:700;color:#c8c8cc;">{{ r.name }}</div>
+                      <div style="font-size:11px;color:#5a5a60;margin-top:1px;">지난 {{ r.lastLabel }}</div>
+                    </div>
+                    <span style="font-size:11px;font-weight:700;color:#5a5a60;">시작 ›</span>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ PROFILE / 내정보 ============ -->
+      <sc-if value="{{ onProfile }}" hint-placeholder-val="{{ false }}">
+        <div class="scr" style="padding:8px 20px 120px;">
+          <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+            <div style="width:52px;height:52px;border-radius:50%;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-weight:700;color:#8a8a90;font-size:17px;flex:none;">준</div>
+            <div>
+              <div style="font-size:17px;font-weight:800;color:#f4f4f5;letter-spacing:-.3px;">준경</div>
+              <div style="font-size:12px;color:#8a8a90;margin-top:2px;">웨이트 트레이닝 · 6년차</div>
+            </div>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#8a8a90;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">도구</div>
+          <div onClick="{{ goCurator }}" style="display:flex;align-items:center;gap:12px;padding:14px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:14px;cursor:pointer;margin-bottom:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20.6 13.4 13 21a2 2 0 0 1-2.8 0l-6.5-6.5a2 2 0 0 1-.6-1.4V5a2 2 0 0 1 2-2h7.1a2 2 0 0 1 1.4.6l6.9 6.9a2 2 0 0 1 0 2.9z" stroke="#8a8a90" stroke-width="1.8" stroke-linejoin="round"/><circle cx="8.5" cy="8.5" r="1.6" fill="#8a8a90"/></svg>
+            <div style="flex:1;min-width:0;">
+              <div style="font-size:14.5px;font-weight:700;color:#f4f4f5;">큐레이터 도구</div>
+              <div style="font-size:11.5px;color:#8a8a90;margin-top:1px;">타임스탬프 태깅 · 관리자 전용</div>
+            </div>
+            <span style="color:#5a5a60;">›</span>
+          </div>
+          <div style="font-size:12px;font-weight:700;color:#8a8a90;text-transform:uppercase;letter-spacing:.5px;margin:22px 0 8px;">계정</div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 2px;border-bottom:1px solid rgba(255,255,255,.06);">
+              <span style="font-size:14px;color:#f4f4f5;">기록 데이터 내보내기</span><span style="color:#5a5a60;">›</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 2px;border-bottom:1px solid rgba(255,255,255,.06);">
+              <span style="font-size:14px;color:#f4f4f5;">알림 설정</span><span style="color:#5a5a60;">›</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 2px;">
+              <span style="font-size:14px;color:#f4f4f5;">로그아웃</span><span style="color:#5a5a60;">›</span>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ CURATOR TAGGING ============ -->
+      <sc-if value="{{ onCurator }}" hint-placeholder-val="{{ false }}">
+        <div class="scr" style="padding:8px 20px 120px;">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <button onClick="{{ goProfile }}" style="width:36px;height:36px;border-radius:11px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);color:#f4f4f5;font-size:17px;cursor:pointer;flex:none;">←</button>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:600;color:#8a8a90;">큐레이터 도구 · 관리자 전용</div>
+              <div style="font-size:20px;font-weight:800;color:#f4f4f5;letter-spacing:-.5px;margin-top:2px;">타임스탬프 태깅</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="mono" style="font-size:20px;font-weight:800;color:#2fbf71;line-height:1;">{{ confCount }}<span style="color:#3a3a40;">/{{ curTotal }}</span></div>
+              <div style="font-size:10px;color:#5a5a60;margin-top:3px;">확정</div>
+            </div>
+          </div>
+          <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:#000;margin-bottom:8px;">
+            <div style="aspect-ratio:16/9;background:repeating-linear-gradient(135deg,#141416,#141416 12px,#0f0f11 12px,#0f0f11 24px);display:flex;align-items:center;justify-content:center;position:relative;">
+              <span style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;">
+                <span style="width:0;height:0;border-left:16px solid #f4f4f5;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px;"></span>
+              </span>
+              <span class="mono" style="position:absolute;bottom:10px;left:12px;font-size:11px;color:#8a8a90;">CBUM — PUSH DAY.mp4</span>
+            </div>
+          </div>
+          <div style="position:relative;height:34px;background:var(--card,#161618);border:1px solid rgba(255,255,255,.07);border-radius:10px;margin-bottom:6px;">
+            <sc-for list="{{ markers }}" as="m" hint-placeholder-count="8">
+              <span style="position:absolute;top:6px;bottom:6px;width:2.5px;border-radius:2px;left:{{ m.pos }};background:{{ m.color }};"></span>
+            </sc-for>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:22px;">
+            <span class="mono" style="font-size:11px;color:#5a5a60;">00:00</span>
+            <span class="mono" style="font-size:11px;color:#5a5a60;">40:00</span>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#8a8a90;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">AI 추정 · 사람 확정</div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <sc-for list="{{ curatorRows }}" as="c" hint-placeholder-count="8">
+              <div style="padding:12px 14px;background:var(--card,#161618);border:1px solid {{ c.border }};border-radius:14px;">
+                <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px;">
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ c.dot }};flex:none;"></span>
+                  <span style="flex:1;min-width:0;font-size:14px;font-weight:700;color:#f4f4f5;">{{ c.name }}</span>
+                  <button onClick="{{ c.onConfirm }}" style="{{ c.confBtn }}">✓</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <button onClick="{{ c.minus5 }}" class="mono" style="width:34px;height:34px;border-radius:9px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);color:#8a8a90;font-size:11px;font-weight:700;cursor:pointer;flex:none;">−5</button>
+                  <button onClick="{{ c.minus1 }}" class="mono" style="width:34px;height:34px;border-radius:9px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);color:#8a8a90;font-size:11px;font-weight:700;cursor:pointer;flex:none;">−1</button>
+                  <div class="mono" style="flex:1;text-align:center;font-size:20px;font-weight:800;color:#f4f4f5;">{{ c.time }}</div>
+                  <button onClick="{{ c.plus1 }}" class="mono" style="width:34px;height:34px;border-radius:9px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);color:#8a8a90;font-size:11px;font-weight:700;cursor:pointer;flex:none;">+1</button>
+                  <button onClick="{{ c.plus5 }}" class="mono" style="width:34px;height:34px;border-radius:9px;background:#1c1c1f;border:1px solid rgba(255,255,255,.08);color:#8a8a90;font-size:11px;font-weight:700;cursor:pointer;flex:none;">+5</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div style="flex:none;height:78px;background:rgba(10,10,11,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:flex-start;padding:12px 10px 0;">
+      <button onClick="{{ goHome }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" stroke="{{ cHome }}" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span style="font-size:10px;font-weight:600;color:{{ cHome }};">홈</span>
+      </button>
+      <button onClick="{{ goExplore }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="{{ cExplore }}" stroke-width="1.8"/><path d="M20 20l-3.5-3.5" stroke="{{ cExplore }}" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:10px;font-weight:600;color:{{ cExplore }};">탐색</span>
+      </button>
+      <button onClick="{{ goRecord }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="4" y="3" width="16" height="18" rx="2.5" stroke="{{ cRecord }}" stroke-width="1.8"/><path d="M8 8h8M8 12h8M8 16h5" stroke="{{ cRecord }}" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:10px;font-weight:600;color:{{ cRecord }};">기록</span>
+      </button>
+      <button onClick="{{ goProfile }}" style="flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="{{ cProfile }}" stroke-width="1.8"/><path d="M4 21a8 8 0 0 1 16 0" stroke="{{ cProfile }}" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span style="font-size:10px;font-weight:600;color:{{ cProfile }};">내정보</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:880},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#e5484d&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;liftSurfaces&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    cold: false,
+    selectedPart: '가슴',
+    records: [
+      { id: 1, name: '인클라인 바벨 벤치프레스', part: '가슴', equip: '바벨', status: 'done',   sets: [[100,8],[102.5,8],[102.5,7]], last: [100,8] },
+      { id: 2, name: '플랫 덤벨 프레스',        part: '가슴', equip: '덤벨', status: 'done',   sets: [[40,10],[40,10],[40,9]],       last: [40,10] },
+      { id: 3, name: '시티드 숄더 프레스',      part: '어깨', equip: '머신', status: 'active', sets: [[60,8],[60,8]],                last: [60,8] },
+      { id: 4, name: '인클라인 덤벨 플라이',    part: '가슴', equip: '덤벨', status: 'todo',   sets: [],                             last: [22,12] },
+      { id: 5, name: '레터럴 레이즈',          part: '어깨', equip: '덤벨', status: 'todo',   sets: [],                             last: [14,15] },
+      { id: 6, name: '케이블 크로스오버',       part: '가슴', equip: '케이블', status: 'todo', sets: [],                             last: [25,12] },
+      { id: 7, name: '오버헤드 트라이셉 익스텐션', part: '삼두', equip: '케이블', status: 'todo', sets: [],                          last: [35,10] },
+      { id: 8, name: '트라이셉 푸시다운',       part: '삼두', equip: '케이블', status: 'todo', sets: [],                             last: [45,12] },
+    ],
+    curator: [
+      { id: 1, name: '인클라인 바벨 벤치프레스', t: 192,  confirmed: true },
+      { id: 2, name: '플랫 덤벨 프레스',        t: 465,  confirmed: true },
+      { id: 3, name: '시티드 숄더 프레스',      t: 740,  confirmed: true },
+      { id: 4, name: '인클라인 덤벨 플라이',    t: 1018, confirmed: false },
+      { id: 5, name: '레터럴 레이즈',          t: 1290, confirmed: false },
+      { id: 6, name: '케이블 크로스오버',       t: 1510, confirmed: false },
+      { id: 7, name: '오버헤드 트라이셉 익스텐션', t: 1784, confirmed: false },
+      { id: 8, name: '트라이셉 푸시다운',       t: 1982, confirmed: false },
+    ],
+  };
+
+  mmss(sec) {
+    const m = Math.floor(sec / 60);
+    const s = Math.max(0, Math.round(sec % 60));
+    return m + ':' + String(s).padStart(2, '0');
+  }
+  fmt(n) { return (Math.round(n * 10) / 10).toString(); }
+
+  addSet(id) {
+    this.setState(s => ({ records: s.records.map(r => r.id === id ? { ...r, sets: [...r.sets, [...r.last]] } : r) }));
+  }
+  completeExercise(id) {
+    this.setState(s => {
+      let advanced = false;
+      const records = s.records.map(r => {
+        if (r.id === id) return { ...r, status: 'done' };
+        return r;
+      });
+      // promote first remaining todo to active
+      const hasActive = records.some(r => r.status === 'active');
+      if (!hasActive) {
+        for (const r of records) { if (r.status === 'todo') { r.status = 'active'; break; } }
+      }
+      return { records };
+    });
+  }
+  reopen(id) {
+    this.setState(s => ({ records: s.records.map(r => {
+      if (r.id === id) return { ...r, status: 'active' };
+      if (r.status === 'active') return { ...r, status: 'todo' };
+      return r;
+    }) }));
+  }
+  startExercise(id) {
+    this.setState(s => ({ records: s.records.map(r => {
+      if (r.id === id) return { ...r, status: 'active' };
+      if (r.status === 'active') return { ...r, status: 'todo' };
+      return r;
+    }) }));
+  }
+
+  muscleFills(hit) {
+    const on = this.props.accentColor ?? '#e5484d';
+    const off = '#2a2a2e';
+    return {
+      deltFill: hit === 'delt' ? on : off,
+      pecFill: hit === 'pec' ? on : off,
+      abFill: hit === 'ab' ? on : off,
+      armFill: hit === 'arm' ? on : off,
+    };
+  }
+
+  renderVals() {
+    const { screen, cold, selectedPart, records, curator } = this.state;
+    const accent = this.props.accentColor ?? '#e5484d';
+    const cardColor = (this.props.liftSurfaces ?? true) ? '#161618' : '#0d0d0e';
+
+    const segBase = 'flex:1;text-align:center;padding:9px 0;border-radius:8px;border:none;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .15s;';
+    const segOn = segBase + 'background:var(--accent,#e5484d);color:#ffffff;';
+    const segOff = segBase + 'background:transparent;color:#8a8a90;';
+
+    const detailTimes = [192, 465, 740, 1018, 1290, 1510, 1784, 1982];
+    const partOf = records.map(r => r.part);
+
+    // muscle target cards (home)
+    const muscleCards = [
+      { name: '전면 삼각근', hit: 'delt', cur: 8,  max: 18 },
+      { name: '가슴',       hit: 'pec',  cur: 12, max: 20 },
+      { name: '측면 삼각근', hit: 'delt', cur: 6,  max: 16 },
+      { name: '삼두',       hit: 'arm',  cur: 9,  max: 18 },
+    ].map(m => ({
+      name: m.name,
+      ...this.muscleFills(m.hit),
+      pct: Math.round(m.cur / m.max * 100) + '%',
+      delta: '+' + m.cur,
+      max: String(m.max),
+    }));
+
+    const homeExercises = records.map((r, i) => ({
+      num: String(i + 1).padStart(2, '0'),
+      name: r.name,
+      tag: r.part + ' · ' + r.equip,
+      time: this.mmss(detailTimes[i]),
+    }));
+
+    const detailList = records.map((r, i) => ({
+      num: String(i + 1).padStart(2, '0'),
+      name: r.name,
+      tag: r.part + ' · ' + r.equip,
+      time: this.mmss(detailTimes[i]),
+      onPlay: () => this.setState({ screen: 'record' }),
+    }));
+
+    // record items
+    const recItems = records.map((r, i) => {
+      const vol = r.sets.reduce((a, [w, rp]) => a + w * rp, 0);
+      const max1 = r.sets.reduce((a, [w, rp]) => Math.max(a, w * (1 + rp / 30)), 0);
+      const setsView = r.sets.map(([w, rp], j) => ({
+        n: String(j + 1),
+        wr: this.fmt(w) + 'kg × ' + rp,
+        rm: this.fmt(Math.round(w * (1 + rp / 30))) + 'kg',
+      }));
+      const lastLabel = r.last[0] + 'kg × ' + r.last[1];
+      return {
+        id: r.id,
+        num: String(i + 1),
+        name: r.name,
+        subtitle: r.part + ' / ' + r.equip + ' / Volume×Reps',
+        isDone: r.status === 'done',
+        isActive: r.status === 'active',
+        isTodo: r.status === 'todo',
+        sets: setsView,
+        volume: this.fmt(vol),
+        max1rm: this.fmt(Math.round(max1)),
+        setCount: r.sets.length,
+        placeholder: lastLabel,
+        lastLabel,
+        summary: r.sets.length ? (r.sets.length + '세트 · ' + lastLabel) : lastLabel,
+        onAdd: () => this.addSet(r.id),
+        onComplete: () => this.completeExercise(r.id),
+        onReopen: () => this.reopen(r.id),
+        onStart: () => this.startExercise(r.id),
+      };
+    });
+    const doneCount = records.filter(r => r.status === 'done').length;
+
+    // explore body map
+    const partHit = { '어깨': 'torso', '가슴': 'torso', '등': 'torso', '복근': 'torso', '팔': 'arms', '하체': 'legs' };
+    const figTorso = ['어깨','가슴','등','복근'].includes(selectedPart) ? accent : '#2a2a2e';
+    const figArms = selectedPart === '팔' ? accent : '#2a2a2e';
+    const figLegs = selectedPart === '하체' ? accent : '#2a2a2e';
+    const tagDefs = [
+      { name: '어깨', top: '13%', left: '6%' },
+      { name: '가슴', top: '22%', left: '64%' },
+      { name: '팔',   top: '34%', left: '3%' },
+      { name: '등',   top: '40%', left: '68%' },
+      { name: '복근', top: '52%', left: '60%' },
+      { name: '하체', top: '66%', left: '8%' },
+    ];
+    const bodyTags = tagDefs.map(t => ({
+      name: t.name, top: t.top, left: t.left,
+      bg: selectedPart === t.name ? accent : 'rgba(20,20,22,.85)',
+      fg: selectedPart === t.name ? '#ffffff' : '#f4f4f5',
+      onClick: () => this.setState({ selectedPart: t.name }),
+    }));
+
+    const routineDB = [
+      { name: '푸시 데이 — 상체 볼륨', part: '가슴', meta: '8 종목 · 62분 · CBUM', slotId: 'ex-push' },
+      { name: '벤치 특화 — 대흉근 하부', part: '가슴', meta: '6 종목 · 48분 · Larry', slotId: 'ex-bench' },
+      { name: '풀 데이 — 등 두께', part: '등', meta: '9 종목 · 68분 · CBUM', slotId: 'ex-pull' },
+      { name: '숄더 3D', part: '어깨', meta: '7 종목 · 52분 · Jeff', slotId: 'ex-shoulder' },
+      { name: '레그 데이 — 대퇴사두', part: '하체', meta: '7 종목 · 55분 · Larry', slotId: 'ex-leg' },
+      { name: '팔 집중 — 이두·삼두', part: '팔', meta: '8 종목 · 45분 · Jeff', slotId: 'ex-arm' },
+      { name: '코어 & 복근 서킷', part: '복근', meta: '6 종목 · 30분 · CBUM', slotId: 'ex-core' },
+    ];
+    const exploreRoutines = routineDB.filter(r => r.part === selectedPart).map(r => ({
+      ...r, onOpen: () => this.setState({ screen: 'detail' }),
+    }));
+
+    const categories = [
+      { name: '푸시', icon: '💪' },
+      { name: '풀', icon: '🏋' },
+      { name: '레그', icon: '🦵' },
+      { name: '전신', icon: '🔥' },
+    ];
+
+    // curator
+    const curatorRows = curator.map(c => ({
+      id: c.id, name: c.name, time: this.mmss(c.t),
+      dot: c.confirmed ? '#2fbf71' : '#5a5a60',
+      border: c.confirmed ? 'rgba(47,191,113,.25)' : 'rgba(255,255,255,.08)',
+      confBtn: 'width:36px;height:36px;border-radius:50%;font-size:15px;font-weight:800;cursor:pointer;flex:none;border:none;' +
+        (c.confirmed ? 'background:#2fbf71;color:#08120b;' : 'background:#1c1c1f;color:#4a4a50;border:1px solid rgba(255,255,255,.12);'),
+      minus5: () => this.setState(s => ({ curator: s.curator.map(x => x.id === c.id ? { ...x, t: Math.max(0, x.t - 5), confirmed: false } : x) })),
+      minus1: () => this.setState(s => ({ curator: s.curator.map(x => x.id === c.id ? { ...x, t: Math.max(0, x.t - 1), confirmed: false } : x) })),
+      plus1: () => this.setState(s => ({ curator: s.curator.map(x => x.id === c.id ? { ...x, t: x.t + 1, confirmed: false } : x) })),
+      plus5: () => this.setState(s => ({ curator: s.curator.map(x => x.id === c.id ? { ...x, t: x.t + 5, confirmed: false } : x) })),
+      onConfirm: () => this.setState(s => ({ curator: s.curator.map(x => x.id === c.id ? { ...x, confirmed: !x.confirmed } : x) })),
+    }));
+    const confCount = curator.filter(c => c.confirmed).length;
+    const markers = curator.map(c => ({ pos: (c.t / 2400 * 100).toFixed(1) + '%', color: c.confirmed ? '#2fbf71' : '#5a5a60' }));
+
+    const navActive = accent, navIdle = '#5a5a60';
+
+    return {
+      accentColor: accent, cardColor,
+      onHome: screen === 'home',
+      onExplore: screen === 'explore',
+      onDetail: screen === 'detail',
+      onRecord: screen === 'record',
+      onProfile: screen === 'profile',
+      onCurator: screen === 'curator',
+      cold, notCold: !cold,
+      warmStyle: !cold ? segOn : segOff,
+      coldStyle: cold ? segOn : segOff,
+      setWarm: () => this.setState({ cold: false }),
+      setCold: () => this.setState({ cold: true }),
+      goHome: () => this.setState({ screen: 'home' }),
+      goExplore: () => this.setState({ screen: 'explore' }),
+      goRecord: () => this.setState({ screen: 'record' }),
+      goProfile: () => this.setState({ screen: 'profile' }),
+      goCurator: () => this.setState({ screen: 'curator' }),
+      openDetail: () => this.setState({ screen: 'detail' }),
+      startRecord: () => this.setState({ screen: 'record' }),
+      cHome: screen === 'home' ? navActive : navIdle,
+      cExplore: screen === 'explore' ? navActive : navIdle,
+      cRecord: screen === 'record' ? navActive : navIdle,
+      cProfile: (screen === 'profile' || screen === 'curator') ? navActive : navIdle,
+      muscleCards,
+      homeExercises,
+      detailList,
+      records: recItems,
+      doneCount, totalCount: records.length,
+      trendRoutines: [
+        { rank: '1', name: '풀 데이 — 등 두께', meta: '9 종목 · 68분', count: '2.4k', slotId: 'tr-1', onOpen: () => this.setState({ screen: 'detail' }) },
+        { rank: '2', name: '레그 데이 — 대퇴사두', meta: '7 종목 · 55분', count: '1.9k', slotId: 'tr-2', onOpen: () => this.setState({ screen: 'detail' }) },
+        { rank: '3', name: '푸시 데이 — 상체 볼륨', meta: '8 종목 · 62분', count: '1.2k', slotId: 'tr-3', onOpen: () => this.setState({ screen: 'detail' }) },
+      ],
+      trendExercises: [
+        { name: '바벨 벤치프레스', count: '3.4k' }, { name: '데드리프트', count: '2.9k' },
+        { name: '스쿼트', count: '2.7k' }, { name: '풀업', count: '2.1k' },
+        { name: '오버헤드 프레스', count: '1.6k' }, { name: '바벨 로우', count: '1.4k' },
+      ],
+      curatorPicks: [
+        { name: '풀 데이 — 등 두께', curator: 'CBUM', meta: '9 종목', slotId: 'cp-1', onOpen: () => this.setState({ screen: 'detail' }) },
+        { name: '레그 데이 — 대퇴사두', curator: 'Larry Wheels', meta: '7 종목', slotId: 'cp-2', onOpen: () => this.setState({ screen: 'detail' }) },
+        { name: '푸시 데이 — 상체 볼륨', curator: 'CBUM', meta: '8 종목', slotId: 'cp-3', onOpen: () => this.setState({ screen: 'detail' }) },
+      ],
+      figTorso, figArms, figLegs, bodyTags,
+      categories,
+      exploreTitle: selectedPart,
+      exploreCount: exploreRoutines.length,
+      exploreRoutines,
+      curatorRows, confCount, curTotal: curator.length, markers,
+    };
+  }
+}
+</script>
+</body>
+</html>
