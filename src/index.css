@@ -1,1 +1,57 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap");
+
+@theme {
+  --color-app: #050506;
+  --color-card: #161618;
+  --color-card-alt: #1c1c1f;
+  --color-card-deep: #131315;
+  --color-accent: #e5484d;
+  --color-success: #2fbf71;
+  --color-warning: #f2c14e;
+  --color-text: #f4f4f5;
+  --color-text-dim: #8a8a90;
+  --color-text-faint: #5a5a60;
+  --color-text-ghost: #3a3a40;
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+body {
+  background: var(--color-app);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.app-scroll,
+.hscroll {
+  scrollbar-width: none;
+}
+
+.scr {
+  animation: scrIn 0.22s ease;
+}
+
+@keyframes scrIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+input::placeholder {
+  color: #55555c;
+}

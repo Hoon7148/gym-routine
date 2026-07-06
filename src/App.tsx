@@ -1,12 +1,26 @@
+import { useAppStore } from "@/store/appStore";
+import { BottomNav } from "@/components/BottomNav";
+import { Home } from "@/screens/Home";
+import { Explore } from "@/screens/Explore";
+import { RoutineDetail } from "@/screens/RoutineDetail";
+import { Record } from "@/screens/Record";
+import { Profile } from "@/screens/Profile";
+import { Curator } from "@/screens/Curator";
+
 export default function App() {
+  const screen = useAppStore((s) => s.screen);
+
   return (
-    <main className="min-h-dvh flex items-center justify-center bg-neutral-950 text-neutral-100">
-      <div className="text-center">
-        <h1 className="text-2xl font-medium">gym-routine</h1>
-        <p className="mt-2 text-sm text-neutral-400">
-          선수 루틴을 영상과 함께 큐레이션하고 기록하는 앱
-        </p>
+    <div className="min-h-dvh bg-app flex flex-col">
+      <div className="flex-1 overflow-y-auto app-scroll relative">
+        {screen === "home" && <Home />}
+        {screen === "explore" && <Explore />}
+        {screen === "detail" && <RoutineDetail />}
+        {screen === "record" && <Record />}
+        {screen === "profile" && <Profile />}
+        {screen === "curator" && <Curator />}
       </div>
-    </main>
+      <BottomNav />
+    </div>
   );
 }
