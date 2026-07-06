@@ -20,6 +20,7 @@ export interface CuratorRow {
 export interface RoutineListing {
   name: string;
   part: string;
+  category: string;
   meta: string;
   slotId: string;
 }

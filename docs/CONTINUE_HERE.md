@@ -38,8 +38,12 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
 
 ## 다음에 할 일 (우선순위 순)
 
-1. **Explore 카테고리 칩** — 프로토타입처럼 지금도 장식용(클릭 안 됨). 실제로
-   유형별 필터링 기능을 붙일지 결정.
+1. ~~**Explore 카테고리 칩**~~ — 완료 (2026-07-06). `유형별` 칩(푸시/풀/레그/전신)에
+   독립 필터 연결. `RoutineListing.category` 필드 추가, `appStore`에
+   `selectedCategory`/`selectCategory` 추가. 신체 부위 필터와 AND 조건으로
+   결합되고, 같은 칩을 다시 누르면 해제됨(null = 전체). 각 루틴의 category는
+   PPL(push/pull/leg) 관례로 매핑(가슴·어깨→푸시, 등→풀, 하체→레그,
+   팔/복근처럼 애매한 건 전신). Playwright로 조합 필터링 동작 확인 완료.
 2. **Supabase 연동** — 지금은 전부 `mockData.ts` 하드코딩. `C:\Users\dbwls\.claude\plans\harmonic-yawning-stream.md`에
    설계된 스키마(routines/exercises/workouts 등)를 아직 마이그레이션 안 함.
    로컬 `supabase start` → 마이그레이션 작성 → `mockData` 대신 실제 쿼리로 교체.

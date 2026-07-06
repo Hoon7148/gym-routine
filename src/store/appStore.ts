@@ -8,6 +8,7 @@ interface AppState {
   screen: Screen;
   cold: boolean;
   selectedPart: string;
+  selectedCategory: string | null;
   records: ExerciseRecord[];
   curator: typeof initialCurator;
 
@@ -21,6 +22,7 @@ interface AppState {
 
   setCold: (cold: boolean) => void;
   selectPart: (part: string) => void;
+  selectCategory: (category: string) => void;
 
   addSet: (id: number) => void;
   completeExercise: (id: number) => void;
@@ -35,6 +37,7 @@ export const useAppStore = create<AppState>((set) => ({
   screen: "home",
   cold: false,
   selectedPart: "가슴",
+  selectedCategory: null,
   records: initialRecords,
   curator: initialCurator,
 
@@ -48,6 +51,8 @@ export const useAppStore = create<AppState>((set) => ({
 
   setCold: (cold) => set({ cold }),
   selectPart: (part) => set({ selectedPart: part }),
+  selectCategory: (category) =>
+    set((s) => ({ selectedCategory: s.selectedCategory === category ? null : category })),
 
   addSet: (id) =>
     set((s) => ({

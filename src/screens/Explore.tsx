@@ -24,13 +24,17 @@ const categoryIcons: Record<string, ReactNode> = {
 export function Explore() {
   const selectedPart = useAppStore((s) => s.selectedPart);
   const selectPart = useAppStore((s) => s.selectPart);
+  const selectedCategory = useAppStore((s) => s.selectedCategory);
+  const selectCategory = useAppStore((s) => s.selectCategory);
   const openDetail = useAppStore((s) => s.openDetail);
 
   const figTorso = ["어깨", "가슴", "등", "복근"].includes(selectedPart) ? ACCENT : OFF;
   const figArms = selectedPart === "팔" ? ACCENT : OFF;
   const figLegs = selectedPart === "하체" ? ACCENT : OFF;
 
-  const exploreRoutines = routineDB.filter((r) => r.part === selectedPart);
+  const exploreRoutines = routineDB.filter(
+    (r) => r.part === selectedPart && (selectedCategory === null || r.category === selectedCategory),
+  );
 
   return (
     <div className="scr pt-2 px-5 pb-[120px]">
@@ -67,14 +71,24 @@ export function Explore() {
       {/* category chips */}
       <div className="text-[13px] font-bold text-text-dim uppercase tracking-wide mb-2.5">유형별</div>
       <div className="flex justify-between mb-[22px]">
-        {categories.map((c) => (
-          <div key={c.name} className="flex flex-col items-center gap-2">
-            <div className="w-[60px] h-[60px] rounded-[18px] bg-card border border-white/[0.07] flex items-center justify-center">
-              {categoryIcons[c.name]}
-            </div>
-            <span className="text-xs font-semibold text-[#c8c8cc]">{c.name}</span>
-          </div>
-        ))}
+        {categories.map((c) => {
+          const active = selectedCategory === c.name;
+          return (
+            <button
+              key={c.name}
+              onClick={() => selectCategory(c.name)}
+              className="flex flex-col items-center gap-2"
+            >
+              <div
+                className={`w-[60px] h-[60px] rounded-[18px] border flex items-center justify-center ${active ? "" : "bg-card border-white/[0.07]"}`}
+                style={active ? { background: ACCENT, borderColor: ACCENT } : undefined}
+              >
+                {categoryIcons[c.name]}
+              </div>
+              <span className="text-xs font-semibold" style={{ color: active ? ACCENT : "#c8c8cc" }}>{c.name}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* filtered popular routines */}
