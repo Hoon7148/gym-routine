@@ -71,22 +71,24 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
    `index.html`의 favicon/apple-touch-icon `<link>` 연결. 빌드 후
    `dist/manifest.webmanifest`에 아이콘 3종 정상 포함 확인, Playwright로 favicon
    200 응답(404 없음) 확인.
-4. ~~**인증**~~ — 로그인/로그아웃 연결까지 완료 (2026-07-07). 답을 못 받아서
-   추천안(매직링크 + 로그인/로그아웃만)으로 진행함.
+4. ~~**인증**~~ — 카카오 로그인 + 이메일 매직링크 병행으로 완료 (2026-07-07).
    - 완료: `src/store/authStore.ts`(Supabase Auth 세션 구독 Zustand 스토어,
-     `sendMagicLink`/`signOut`). `Profile.tsx`에 로그인 폼(이메일 입력 + 매직링크
-     발송) 연결 — 로그인 상태면 실제 유저 이메일 표시 + 로그아웃 버튼 동작,
-     로그아웃 상태면 로그인 폼 표시(로그아웃 행은 숨김).
-   - OAuth(구글/카카오) 대신 매직링크를 쓴 이유: 외부 개발자 콘솔 등록 없이
-     Supabase 프로젝트만 있으면 바로 동작.
+     `sendMagicLink`/`signInWithKakao`/`signOut`). `Profile.tsx`에 로그인
+     폼(카카오 브랜드 버튼 + "또는" 구분선 + 이메일 입력) 연결 — 로그인 상태면
+     실제 유저 이메일 표시 + 로그아웃 버튼 동작, 로그아웃 상태면 로그인 폼
+     표시(로그아웃 행은 숨김).
    - 의도적으로 보류: Record/Curator/Home은 이번에도 `mockData` 유지. 로그인은
      연결됐지만 `workouts`/`workout_sets`에 실제로 쓰는 코드는 아직 없음 —
      그건 다음 라운드.
    - `npx tsc -b --noEmit` / `npx eslint .` / `npm run build` 모두 클린.
-     Playwright로 Supabase 미설정 상태에서 로그인 폼이 크래시 없이 렌더되고,
-     매직링크 발송 시도 시 "Supabase가 아직 설정되지 않았어요" 에러 메시지가
-     깨지지 않고 표시되는 것 확인. **실제 이메일 발송/로그인 콜백은 아직
-     테스트 못 함** — Supabase 프로젝트 연결 후 실제 이메일로 확인 필요.
+     Playwright로 Supabase 미설정 상태에서 로그인 폼(카카오 버튼 포함)이
+     크래시 없이 렌더되고, 두 로그인 방식 모두 "Supabase가 아직 설정되지
+     않았어요" 에러 메시지가 깨지지 않고 표시되는 것 확인.
+   - **2026-07-07 기준 Supabase 프로젝트가 아직 연결 안 됨** — 저장소에
+     `.env.local` 없음, 이 세션 환경변수에도 `VITE_SUPABASE_*` 없음(직접 확인).
+     카카오 로그인은 Supabase 프로젝트 + 카카오 개발자 콘솔 앱 둘 다 있어야
+     실제로 동작 — 아래 "Supabase 프로젝트 연결하기"와 "카카오 로그인 설정하기"
+     둘 다 필요. **실제 로그인은 아직 전혀 테스트 못 함.**
 5. **Record를 실제 Supabase 쓰기로 연결** — 이제 인증이 있으니 `workouts`/
    `workout_sets`에 실제 INSERT하도록 Record 화면을 옮길 차례. Home의 근육
    성장 카드·트렌딩 카운트도 이 데이터가 쌓이면 실제 집계로 바꿀 수 있음.
@@ -108,9 +110,28 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
    루틴 클릭 시 RoutineDetail이 해당 루틴의 실제 종목 목록을 보여주는지 확인.
    (DB 비밀번호나 service_role 키는 필요 없음 — anon key만으로 충분한 공개
    읽기 전용 연동.)
-6. 내정보 화면에서 이메일 입력 후 "매직링크 보내기" → 실제 받은 편지함에서
-   로그인 링크 클릭 → 앱으로 돌아왔을 때 세션이 잡혀서 이메일과 로그아웃
-   버튼이 보이는지 확인.
+6. 내정보 화면에서 이메일 입력 후 "이메일로 로그인 링크 받기" → 실제 받은
+   편지함에서 로그인 링크 클릭 → 앱으로 돌아왔을 때 세션이 잡혀서 이메일과
+   로그아웃 버튼이 보이는지 확인.
+
+## 카카오 로그인 설정하기 (사용자가 할 일)
+
+카카오 로그인은 Supabase 프로젝트 연결이 먼저 되어 있어야 함(위 단계 완료 후 진행).
+
+1. [Kakao Developers](https://developers.kakao.com)에서 애플리케이션 생성
+2. 앱 설정 → 앱 키에서 **REST API 키** 확인
+3. 제품 설정 → 카카오 로그인 → 활성화 ON, **Redirect URI**에
+   `https://<project-ref>.supabase.co/auth/v1/callback` 등록
+   (`<project-ref>`는 Supabase 프로젝트 URL의 서브도메인 부분)
+4. 카카오 로그인 → 보안 → **Client Secret** 코드 생성 후 "사용함"으로 활성화
+5. Supabase 대시보드 → Authentication → Providers → Kakao 찾아서 활성화,
+   REST API 키를 Client ID에, 4번에서 만든 Client Secret을 입력 후 저장
+6. (선택) 카카오 로그인 → 동의항목에서 "카카오계정(이메일)" 동의 항목 설정 —
+   이메일을 못 받아오면 `session.user.email`이 비어서 Profile 화면에 이메일
+   대신 빈 값이 보일 수 있음. 카카오 정책상 이메일 제공엔 비즈니스 앱 전환이
+   필요할 수 있으니, 안 되면 일단 이메일 매직링크로 테스트해도 됨.
+7. `npm run dev` → 내정보 → "카카오로 계속하기" 클릭 → 카카오 로그인 페이지로
+   리디렉션되는지, 로그인 후 앱으로 돌아와 세션이 잡히는지 확인.
 
 ## 재개 방법
 
