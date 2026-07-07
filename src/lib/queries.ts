@@ -106,6 +106,122 @@ export interface RoutineDetail {
   items: RoutineDetailItem[];
 }
 
+// ── Record 화면: 실제 workouts/workout_sets 쓰기 ──
+
+export interface WorkoutExercise {
+  exerciseId: string;
+  name: string;
+  part: string;
+  equip: string;
+  sets: [number, number][];
+  last: [number, number];
+}
+
+// 진행 중(완료 안 된) workout이 있으면 이어서 쓰고, 없으면 새로 생성.
+export async function getOrCreateWorkout(userId: string, routineId: string): Promise<string | null> {
+  if (!supabase) return null;
+
+  const { data: existing } = await supabase
+    .from("workouts")
+    .select("id")
+    .eq("user_id", userId)
+    .eq("routine_id", routineId)
+    .is("completed_at", null)
+    .order("started_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (existing) return existing.id;
+
+  const { data: created, error } = await supabase
+    .from("workouts")
+    .insert({ user_id: userId, routine_id: routineId })
+    .select("id")
+    .single();
+  if (error || !created) return null;
+  return created.id;
+}
+
+interface RoutineItemWithExercise {
+  exercise: { id: string; name_ko: string; body_part: BodyPart; equipment: string | null } | null;
+}
+
+export async function getWorkoutExercises(
+  workoutId: string,
+  routineId: string,
+  userId: string,
+): Promise<WorkoutExercise[]> {
+  if (!supabase) return [];
+
+  const { data: items } = await supabase
+    .from("routine_items")
+    .select("exercise:exercises ( id, name_ko, body_part, equipment )")
+    .eq("routine_id", routineId)
+    .order("position");
+  if (!items) return [];
+
+  const rows = items as unknown as RoutineItemWithExercise[];
+  const exerciseIds = rows.map((it) => it.exercise?.id).filter((id): id is string => !!id);
+  if (exerciseIds.length === 0) return [];
+
+  const { data: currentSets } = await supabase
+    .from("workout_sets")
+    .select("exercise_id, weight_kg, reps, set_number")
+    .eq("workout_id", workoutId)
+    .order("set_number");
+
+  const { data: lastSets } = await supabase
+    .from("workout_sets")
+    .select("exercise_id, weight_kg, reps, created_at")
+    .eq("user_id", userId)
+    .in("exercise_id", exerciseIds)
+    .order("created_at", { ascending: false });
+
+  const lastByExercise = new Map<string, [number, number]>();
+  for (const row of lastSets ?? []) {
+    if (!lastByExercise.has(row.exercise_id)) {
+      lastByExercise.set(row.exercise_id, [Number(row.weight_kg ?? 0), row.reps ?? 0]);
+    }
+  }
+
+  const setsByExercise = new Map<string, [number, number][]>();
+  for (const row of currentSets ?? []) {
+    const arr = setsByExercise.get(row.exercise_id) ?? [];
+    arr.push([Number(row.weight_kg ?? 0), row.reps ?? 0]);
+    setsByExercise.set(row.exercise_id, arr);
+  }
+
+  return rows
+    .filter((it): it is RoutineItemWithExercise & { exercise: NonNullable<RoutineItemWithExercise["exercise"]> } => !!it.exercise)
+    .map((it) => ({
+      exerciseId: it.exercise.id,
+      name: it.exercise.name_ko,
+      part: BODY_PART_EN_TO_KO[it.exercise.body_part],
+      equip: it.exercise.equipment ?? "",
+      sets: setsByExercise.get(it.exercise.id) ?? [],
+      last: lastByExercise.get(it.exercise.id) ?? [0, 0],
+    }));
+}
+
+export async function insertWorkoutSet(
+  workoutId: string,
+  userId: string,
+  exerciseId: string,
+  setNumber: number,
+  weightKg: number,
+  reps: number,
+): Promise<void> {
+  if (!supabase) return;
+  await supabase.from("workout_sets").insert({
+    workout_id: workoutId,
+    user_id: userId,
+    exercise_id: exerciseId,
+    set_number: setNumber,
+    weight_kg: weightKg,
+    reps,
+    is_completed: true,
+  });
+}
+
 export async function getRoutineDetail(routineId: string): Promise<RoutineDetail | null> {
   if (!supabase) return null;
   const { data, error } = await supabase

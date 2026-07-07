@@ -23,7 +23,13 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (!supabase) return { error: "Supabase가 아직 설정되지 않았어요." };
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "kakao",
-      options: { redirectTo: window.location.origin },
+      options: {
+        redirectTo: window.location.origin,
+        // 카카오 앱의 동의항목에서 실제로 승인된 스코프만 요청 (승인 안 된 항목을
+        // 요청에 포함하면 KOE205로 로그인 자체가 막힘). account_email은 콘솔에서
+        // 필수 동의로 전환 완료.
+        scopes: "profile_nickname profile_image account_email",
+      },
     });
     return { error: error?.message ?? null };
   },

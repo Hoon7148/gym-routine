@@ -1,16 +1,17 @@
-import type { CuratorRow, ExerciseRecord } from "@/types/domain";
+import type { CuratorRow } from "@/types/domain";
 
 export const detailTimes = [192, 465, 740, 1018, 1290, 1510, 1784, 1982];
 
-export const initialRecords: ExerciseRecord[] = [
-  { id: 1, name: "인클라인 바벨 벤치프레스", part: "가슴", equip: "바벨", status: "done", sets: [[100, 8], [102.5, 8], [102.5, 7]], last: [100, 8] },
-  { id: 2, name: "플랫 덤벨 프레스", part: "가슴", equip: "덤벨", status: "done", sets: [[40, 10], [40, 10], [40, 9]], last: [40, 10] },
-  { id: 3, name: "시티드 숄더 프레스", part: "어깨", equip: "머신", status: "active", sets: [[60, 8], [60, 8]], last: [60, 8] },
-  { id: 4, name: "인클라인 덤벨 플라이", part: "가슴", equip: "덤벨", status: "todo", sets: [], last: [22, 12] },
-  { id: 5, name: "레터럴 레이즈", part: "어깨", equip: "덤벨", status: "todo", sets: [], last: [14, 15] },
-  { id: 6, name: "케이블 크로스오버", part: "가슴", equip: "케이블", status: "todo", sets: [], last: [25, 12] },
-  { id: 7, name: "오버헤드 트라이셉 익스텐션", part: "삼두", equip: "케이블", status: "todo", sets: [], last: [35, 10] },
-  { id: 8, name: "트라이셉 푸시다운", part: "삼두", equip: "케이블", status: "todo", sets: [], last: [45, 12] },
+// 홈 화면의 "오늘의 추천" 종목 목록 미리보기용 (Home은 아직 mock — 다음 우선순위에서 실 데이터로 교체 예정).
+export const homeExerciseDefs = [
+  { name: "인클라인 바벨 벤치프레스", part: "가슴", equip: "바벨" },
+  { name: "플랫 덤벨 프레스", part: "가슴", equip: "덤벨" },
+  { name: "시티드 숄더 프레스", part: "어깨", equip: "머신" },
+  { name: "인클라인 덤벨 플라이", part: "가슴", equip: "덤벨" },
+  { name: "레터럴 레이즈", part: "어깨", equip: "덤벨" },
+  { name: "케이블 크로스오버", part: "가슴", equip: "케이블" },
+  { name: "오버헤드 트라이셉 익스텐션", part: "삼두", equip: "케이블" },
+  { name: "트라이셉 푸시다운", part: "삼두", equip: "케이블" },
 ];
 
 export const initialCurator: CuratorRow[] = [

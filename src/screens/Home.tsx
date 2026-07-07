@@ -1,5 +1,5 @@
 import { useAppStore } from "@/store/appStore";
-import { detailTimes, muscleCardDefs, curatorPicks, trendExercises, trendRoutines } from "@/data/mockData";
+import { detailTimes, homeExerciseDefs, muscleCardDefs, curatorPicks, trendExercises, trendRoutines } from "@/data/mockData";
 import { mmss } from "@/lib/format";
 import { ImageSlot } from "@/components/ImageSlot";
 import { MuscleIcon } from "@/components/MuscleIcon";
@@ -9,11 +9,10 @@ const ACCENT = "#e5484d";
 export function Home() {
   const cold = useAppStore((s) => s.cold);
   const setCold = useAppStore((s) => s.setCold);
-  const records = useAppStore((s) => s.records);
   const openDetail = useAppStore((s) => s.openDetail);
   const startRecord = useAppStore((s) => s.startRecord);
 
-  const homeExercises = records.map((r, i) => ({
+  const homeExercises = homeExerciseDefs.map((r, i) => ({
     num: String(i + 1).padStart(2, "0"),
     name: r.name,
     tag: `${r.part} · ${r.equip}`,
