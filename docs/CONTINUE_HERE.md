@@ -55,24 +55,27 @@ React 컴포넌트로 이식한 웨이트 트레이닝 루틴 앱. 화면 6개:
 Supabase 미설정 상태에서도 앱이 크래시 없이 동작하는 것 확인(env 없으면
 `supabase` 클라이언트가 `null`로 폴백하도록 처리해둠).
 
-## 지금 상태 — 여기서 멈춘 이유
+## 지금 상태 — 로컬에서 마이그레이션까지 완료함
 
-**Supabase 프로젝트(`gym-routine`)는 만들어졌고 URL/anon key도 받았지만,
-이 세션(샌드박스)에서는 실제 연동을 검증할 수 없어서 로컬로 넘겨야 함.**
+**2026-07-07 로컬 세션에서 아래를 전부 끝냄 (MCP로 직접 실행, SQL Editor 수동
+작업 불필요했음):**
 
-- 마이그레이션(`0001`~`0003`)과 `supabase/seed.sql`을 아직 Supabase SQL
-  Editor에서 실행 안 함.
-- 이 샌드박스 환경은 `supabase.co`로 나가는 아웃바운드 자체가 조직 네트워크
-  정책으로 차단되어 있음(curl/브라우저 둘 다 `ERR_TUNNEL_CONNECTION_FAILED`,
-  프록시 상태의 `recentRelayFailures`에 `<project-ref>.supabase.co:443` 403
-  거부 기록 확인됨). 코드는 정상 — Explore 화면이 정확한 쿼리로 실제 요청을
-  보내는 것까지 확인했지만, 응답을 받을 수가 없음.
-- 카카오 로그인도 카카오 개발자 콘솔에 앱을 등록하고 Supabase Provider 설정을
-  해야 동작하는데, 둘 다 사용자 계정으로 사용자가 직접 해야 하는 작업이라
-  아직 안 되어 있음.
+- 마이그레이션 3개(`0001`~`0003`) + `supabase/seed.sql` 전부 적용 완료.
+  `routines` 7행, `exercises` 45행, `routine_items` 51행 확인.
+- 보안 어드바이저(`get_advisors`) 클린 — RLS 관련 경고 없음.
+- `.env.local` 생성 완료(로컬 파일, git에 없음 — 컴퓨터를 옮기면 다시 만들어야 함).
+- `listExploreRoutines`/`getRoutineDetail` 쿼리를 실제 프로젝트에 직접 실행해
+  응답 확인 — Explore/RoutineDetail이 진짜 데이터를 받아옴.
+- `tsc -b --noEmit` / `eslint` / `npm run build` 전부 클린.
 
-**따라서 다음은 전부 사용자 컴퓨터(또는 `supabase.co` 접근 가능한 환경)에서
-진행해야 함.**
+**아직 안 된 것 — 카카오 로그인 설정.** 카카오 개발자 콘솔 앱 등록 +
+Supabase Provider 연결은 사용자 계정으로 직접 해야 하는 작업이라 미완료.
+아래 "카카오 로그인 설정하기" 섹션 참고. 이메일 매직링크는 Supabase 프로젝트만
+있으면 바로 동작하니 그걸로 먼저 테스트 가능.
+
+**미리보기 도구가 이 프로젝트 폴더(futsal-app 세션에 스코프됨)로 dev 서버를
+못 띄워서, 브라우저 시각 확인은 여전히 안 됨.** Node 스크립트로 쿼리 자체는
+검증했지만 실제 화면 렌더링은 `npm run dev`로 직접 봐야 함.
 
 ## 로컬에서 이어서 진행하기
 
@@ -84,32 +87,20 @@ git pull
 npm install
 ```
 
-### 2) Supabase 마이그레이션 + 시드 실행
+### 2) 로컬 환경변수 설정
 
-Supabase 대시보드(`https://supabase.com/dashboard/project/<project-ref>`) →
-**SQL Editor** → 아래 4개 파일을 **이 순서 그대로** 각각 새 쿼리로 붙여넣고 실행:
-
-1. `supabase/migrations/0001_initial_schema.sql`
-2. `supabase/migrations/0002_rls_policies.sql`
-3. `supabase/migrations/0003_routine_split_type.sql`
-4. `supabase/seed.sql`
-
-**Table Editor**에서 `routines` 테이블에 7개 행이 보이면 성공.
-
-### 3) 로컬 환경변수 설정
-
-저장소 루트에 `.env.local` 생성(git에 안 올라감, 컴퓨터마다 직접 만들어야 함).
-값은 Supabase 대시보드 Project Settings → API 에서 확인:
+저장소 루트에 `.env.local`이 이미 없다면(새 컴퓨터라면) 새로 생성.
+값은 Supabase 대시보드(`fwivqflsuskfqpjyoyqt` 프로젝트) Project Settings → API 에서 확인:
 
 ```
-VITE_SUPABASE_URL=<Project URL>
-VITE_SUPABASE_ANON_KEY=<anon key>
+VITE_SUPABASE_URL=https://fwivqflsuskfqpjyoyqt.supabase.co
+VITE_SUPABASE_ANON_KEY=<anon/publishable key>
 ```
 
 (DB 비밀번호나 service_role 키는 필요 없음 — anon key만으로 충분한 공개
 읽기 전용 연동 + 로그인.)
 
-### 4) 확인 체크리스트
+### 3) 확인 체크리스트
 
 `npm run dev` 실행 후:
 
@@ -125,12 +116,12 @@ VITE_SUPABASE_ANON_KEY=<anon key>
 
 ## 카카오 로그인 설정하기
 
-Supabase 프로젝트 연결(위 2번) 완료 후 진행.
+Supabase 프로젝트는 이미 연결돼 있음(위 "지금 상태" 참고). 카카오 쪽만 하면 됨.
 
 1. [Kakao Developers](https://developers.kakao.com)에서 애플리케이션 생성
 2. 앱 설정 → 앱 키에서 **REST API 키** 확인
 3. 제품 설정 → 카카오 로그인 → 활성화 ON, **Redirect URI**에
-   `https://<project-ref>.supabase.co/auth/v1/callback` 등록
+   `https://fwivqflsuskfqpjyoyqt.supabase.co/auth/v1/callback` 등록
 4. 카카오 로그인 → 보안 → **Client Secret** 코드 생성 후 "사용함"으로 활성화
 5. Supabase 대시보드 → Authentication → Providers → Kakao 활성화, REST API
    키를 Client ID에, 4번 Client Secret을 입력 후 저장
