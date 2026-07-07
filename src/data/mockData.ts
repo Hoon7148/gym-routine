@@ -1,4 +1,4 @@
-import type { CuratorRow, ExerciseRecord, RoutineListing } from "@/types/domain";
+import type { CuratorRow, ExerciseRecord } from "@/types/domain";
 
 export const detailTimes = [192, 465, 740, 1018, 1290, 1510, 1784, 1982];
 
@@ -30,16 +30,6 @@ export const muscleCardDefs = [
   { name: "측면 삼각근", hit: "delt", cur: 6, max: 16 },
   { name: "삼두", hit: "arm", cur: 9, max: 18 },
 ] as const;
-
-export const routineDB: RoutineListing[] = [
-  { name: "푸시 데이 — 상체 볼륨", part: "가슴", category: "푸시", meta: "8 종목 · 62분 · CBUM", slotId: "ex-push" },
-  { name: "벤치 특화 — 대흉근 하부", part: "가슴", category: "푸시", meta: "6 종목 · 48분 · Larry", slotId: "ex-bench" },
-  { name: "풀 데이 — 등 두께", part: "등", category: "풀", meta: "9 종목 · 68분 · CBUM", slotId: "ex-pull" },
-  { name: "숄더 3D", part: "어깨", category: "푸시", meta: "7 종목 · 52분 · Jeff", slotId: "ex-shoulder" },
-  { name: "레그 데이 — 대퇴사두", part: "하체", category: "레그", meta: "7 종목 · 55분 · Larry", slotId: "ex-leg" },
-  { name: "팔 집중 — 이두·삼두", part: "팔", category: "전신", meta: "8 종목 · 45분 · Jeff", slotId: "ex-arm" },
-  { name: "코어 & 복근 서킷", part: "복근", category: "전신", meta: "6 종목 · 30분 · CBUM", slotId: "ex-core" },
-];
 
 export const trendRoutines = [
   { rank: "1", name: "풀 데이 — 등 두께", meta: "9 종목 · 68분", count: "2.4k" },

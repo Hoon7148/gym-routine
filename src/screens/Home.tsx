@@ -87,7 +87,7 @@ export function Home() {
 
         {/* exercise list w/ timestamp deeplinks (sets/weight intentionally hidden) */}
         {homeExercises.map((d) => (
-          <div key={d.num} onClick={openDetail} className="flex items-center gap-3.5 py-3.5 border-b border-white/[0.06] cursor-pointer">
+          <div key={d.num} onClick={() => openDetail()} className="flex items-center gap-3.5 py-3.5 border-b border-white/[0.06] cursor-pointer">
             <span className="mono text-sm font-bold text-text-ghost w-5 flex-none">{d.num}</span>
             <div className="flex-1 min-w-0">
               <div className="text-[14.5px] font-bold text-text tracking-tight">{d.name}</div>
@@ -101,7 +101,7 @@ export function Home() {
         ))}
 
         <div className="flex gap-2.5 mt-[18px]">
-          <button onClick={openDetail} className="flex-none w-[52px] h-[52px] rounded-2xl bg-card border border-white/10 text-text text-xl">≣</button>
+          <button onClick={() => openDetail()} className="flex-none w-[52px] h-[52px] rounded-2xl bg-card border border-white/10 text-text text-xl">≣</button>
           <button onClick={startRecord} className="flex-1 flex items-center justify-center gap-2 bg-accent text-white rounded-2xl py-4 text-[15.5px] font-extrabold">
             <span className="w-0 h-0 border-l-[9px] border-l-white border-y-[6px] border-y-transparent" />
             운동 시작
@@ -131,7 +131,7 @@ export function Home() {
               <span className="text-xs text-text-dim">전체 →</span>
             </div>
             {trendRoutines.map((t) => (
-              <div key={t.rank} onClick={openDetail} className="flex items-center gap-3 py-3 border-b border-white/[0.06] cursor-pointer">
+              <div key={t.rank} onClick={() => openDetail()} className="flex items-center gap-3 py-3 border-b border-white/[0.06] cursor-pointer">
                 <span className="mono text-lg font-extrabold text-[#2a2a2e] w-[22px]">{t.rank}</span>
                 <ImageSlot className="w-11 h-11" rounded="rounded-[11px]" />
                 <div className="flex-1 min-w-0">
@@ -164,7 +164,7 @@ export function Home() {
             </div>
             <div className="text-base font-extrabold text-text tracking-tight mb-3">큐레이터 픽</div>
             {curatorPicks.map((c) => (
-              <div key={c.name} onClick={openDetail} className="flex items-center gap-3 py-3 border-b border-white/[0.06] cursor-pointer">
+              <div key={c.name} onClick={() => openDetail()} className="flex items-center gap-3 py-3 border-b border-white/[0.06] cursor-pointer">
                 <ImageSlot className="w-11 h-11" rounded="rounded-[11px]" />
                 <div className="flex-1 min-w-0">
                   <div className="text-[14.5px] font-bold text-text">{c.name}</div>

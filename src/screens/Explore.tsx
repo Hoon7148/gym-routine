@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useAppStore } from "@/store/appStore";
-import { bodyTagDefs, categories, routineDB } from "@/data/mockData";
+import { bodyTagDefs, categories } from "@/data/mockData";
 import { ImageSlot } from "@/components/ImageSlot";
+import { listExploreRoutines, type ExploreRoutine } from "@/lib/queries";
 
 const ACCENT = "#e5484d";
 const OFF = "#2a2a2e";
@@ -32,9 +33,17 @@ export function Explore() {
   const figArms = selectedPart === "팔" ? ACCENT : OFF;
   const figLegs = selectedPart === "하체" ? ACCENT : OFF;
 
-  const exploreRoutines = routineDB.filter(
-    (r) => r.part === selectedPart && (selectedCategory === null || r.category === selectedCategory),
-  );
+  const [exploreRoutines, setExploreRoutines] = useState<ExploreRoutine[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    listExploreRoutines(selectedPart, selectedCategory).then((routines) => {
+      if (!cancelled) setExploreRoutines(routines);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedPart, selectedCategory]);
 
   return (
     <div className="scr pt-2 px-5 pb-[120px]">
@@ -97,7 +106,7 @@ export function Explore() {
         <span className="text-xs text-text-dim">{exploreRoutines.length}개</span>
       </div>
       {exploreRoutines.map((r) => (
-        <div key={r.slotId} onClick={openDetail} className="flex items-center gap-3 bg-card border border-white/[0.07] rounded-2xl p-3 mb-2.5 cursor-pointer">
+        <div key={r.id} onClick={() => openDetail(r.id)} className="flex items-center gap-3 bg-card border border-white/[0.07] rounded-2xl p-3 mb-2.5 cursor-pointer">
           <ImageSlot className="w-[60px] h-[60px]" rounded="rounded-[13px]" />
           <div className="flex-1 min-w-0">
             <div className="text-[15px] font-bold text-text tracking-tight">{r.name}</div>

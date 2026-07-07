@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { initialCurator, initialRecords } from "@/data/mockData";
+import { DEFAULT_ROUTINE_ID } from "@/lib/queries";
 import type { ExerciseRecord } from "@/types/domain";
 
 export type Screen = "home" | "explore" | "detail" | "record" | "profile" | "curator";
@@ -9,6 +10,7 @@ interface AppState {
   cold: boolean;
   selectedPart: string;
   selectedCategory: string | null;
+  selectedRoutineId: string;
   records: ExerciseRecord[];
   curator: typeof initialCurator;
 
@@ -17,7 +19,7 @@ interface AppState {
   goRecord: () => void;
   goProfile: () => void;
   goCurator: () => void;
-  openDetail: () => void;
+  openDetail: (routineId?: string) => void;
   startRecord: () => void;
 
   setCold: (cold: boolean) => void;
@@ -38,6 +40,7 @@ export const useAppStore = create<AppState>((set) => ({
   cold: false,
   selectedPart: "가슴",
   selectedCategory: null,
+  selectedRoutineId: DEFAULT_ROUTINE_ID,
   records: initialRecords,
   curator: initialCurator,
 
@@ -46,7 +49,7 @@ export const useAppStore = create<AppState>((set) => ({
   goRecord: () => set({ screen: "record" }),
   goProfile: () => set({ screen: "profile" }),
   goCurator: () => set({ screen: "curator" }),
-  openDetail: () => set({ screen: "detail" }),
+  openDetail: (routineId = DEFAULT_ROUTINE_ID) => set({ screen: "detail", selectedRoutineId: routineId }),
   startRecord: () => set({ screen: "record" }),
 
   setCold: (cold) => set({ cold }),

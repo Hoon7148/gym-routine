@@ -17,10 +17,3 @@ export interface CuratorRow {
   confirmed: boolean;
 }
 
-export interface RoutineListing {
-  name: string;
-  part: string;
-  category: string;
-  meta: string;
-  slotId: string;
-}
