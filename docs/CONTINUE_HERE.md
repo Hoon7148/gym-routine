@@ -44,12 +44,47 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
    결합되고, 같은 칩을 다시 누르면 해제됨(null = 전체). 각 루틴의 category는
    PPL(push/pull/leg) 관례로 매핑(가슴·어깨→푸시, 등→풀, 하체→레그,
    팔/복근처럼 애매한 건 전신). Playwright로 조합 필터링 동작 확인 완료.
-2. **Supabase 연동** — 지금은 전부 `mockData.ts` 하드코딩. `C:\Users\dbwls\.claude\plans\harmonic-yawning-stream.md`에
-   설계된 스키마(routines/exercises/workouts 등)를 아직 마이그레이션 안 함.
-   로컬 `supabase start` → 마이그레이션 작성 → `mockData` 대신 실제 쿼리로 교체.
+2. ~~**Supabase 연동**~~ — Explore/RoutineDetail만 부분 완료 (2026-07-06).
+   이 샌드박스는 Docker 데몬 권한이 없어 `supabase start`(로컬 스택)를 못 띄우고,
+   사용자 계정으로 원격 프로젝트를 새로 만들어야 해서 아직 URL/anon key 연결
+   전임. 그때까지는 아래 "Supabase 프로젝트 연결하기" 대로 세팅하면 됨.
+   - 완료: `routines.split_type` 컬럼 추가(`0003_routine_split_type.sql`),
+     `src/types/database.ts` 스키마에 맞게 수동 작성, `src/lib/queries.ts`
+     쿼리 레이어, Explore/RoutineDetail을 실제 Supabase 쿼리로 교체,
+     `supabase/seed.sql`(mockData 콘텐츠를 실제 행으로), `appStore`에
+     `selectedRoutineId` 추가(어떤 루틴을 클릭했는지 추적).
+   - 의도적으로 보류: Home/Record/Curator/Profile은 `mockData` 유지. Record가
+     쓰는 `workouts`/`workout_sets`는 RLS가 `auth.uid()`를 요구해서 인증(4번)
+     없이는 의미 있게 연결 불가. Home의 근육 성장 카드·트렌딩 카운트도 실제
+     유저 기록 집계라 동일한 이유로 보류.
+   - env 변수가 없을 때 `createClient`가 즉시 throw해서 앱 전체가 하얗게
+     깨지는 버그를 발견해 수정함(`src/lib/supabase.ts`, null로 폴백) — 지금
+     상태(Supabase 미설정)에서도 앱은 정상 로드되고 Explore는 "0개"로 표시됨.
+   - `npx tsc -b --noEmit` / `npx eslint .` / `npm run build` 모두 클린.
+     Playwright로 env 미설정 상태에서 크래시 없음, Home 정상 렌더 확인.
+     **실제 Supabase 프로젝트에 대고는 아직 테스트 못 함** — 세팅 후 확인 필요.
 3. **PWA 아이콘** — `vite.config.ts`의 manifest에 아이콘 파일 경로가 없음
    (futsal-app 것 그대로 안 가져옴). 아이콘 세트 준비 필요.
-4. **인증** — 로그인 없음. `준경`/아바타 이니셜이 하드코딩.
+4. **인증** — 로그인 없음. `준경`/아바타 이니셜이 하드코딩. 이게 있어야 Record/
+   Curator/Profile도 Supabase로 옮길 수 있음.
+
+## Supabase 프로젝트 연결하기 (사용자가 할 일)
+
+1. [supabase.com](https://supabase.com)에서 새 프로젝트 생성
+2. Project Settings → API 에서 Project URL과 anon key 확인
+3. Supabase 대시보드의 SQL Editor에 아래 순서로 붙여넣어 실행:
+   `supabase/migrations/0001_initial_schema.sql` →
+   `supabase/migrations/0002_rls_policies.sql` →
+   `supabase/migrations/0003_routine_split_type.sql` → `supabase/seed.sql`
+4. 저장소 루트에 `.env.local` 생성(`.env.example` 참고):
+   ```
+   VITE_SUPABASE_URL=<Project URL>
+   VITE_SUPABASE_ANON_KEY=<anon key>
+   ```
+5. `npm run dev` → Explore에서 부위/유형 필터 눌러보고 실제 루틴이 뜨는지,
+   루틴 클릭 시 RoutineDetail이 해당 루틴의 실제 종목 목록을 보여주는지 확인.
+   (DB 비밀번호나 service_role 키는 필요 없음 — anon key만으로 충분한 공개
+   읽기 전용 연동.)
 
 ## 재개 방법
 
