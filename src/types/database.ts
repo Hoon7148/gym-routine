@@ -184,7 +184,16 @@ export type Database = {
       };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      get_trending_routines: {
+        Args: { limit_count?: number };
+        Returns: { routine_id: string; workout_count: number }[];
+      };
+      get_trending_exercises: {
+        Args: { limit_count?: number };
+        Returns: { exercise_id: string; set_count: number }[];
+      };
+    };
     Enums: {
       body_part: BodyPart;
       routine_status: RoutineStatus;

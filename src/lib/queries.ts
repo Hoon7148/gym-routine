@@ -270,3 +270,110 @@ export async function getRoutineDetail(routineId: string): Promise<RoutineDetail
     items,
   };
 }
+
+// ── Home 화면: 오늘 트렌딩 + 콜드스타트 폴백 ──
+// workouts/workout_sets는 RLS로 본인 행만 조회되므로, 전체 유저 집계는
+// 0005 마이그레이션의 SECURITY DEFINER 함수(get_trending_routines/exercises)로 받는다.
+
+export interface TrendingRoutine {
+  routineId: string;
+  rank: number;
+  name: string;
+  meta: string;
+  count: number;
+}
+
+interface TrendingRoutineRow {
+  id: string;
+  title: string;
+  video: { duration_seconds: number | null } | null;
+  routine_items: { count: number }[];
+}
+
+export async function getTrendingRoutines(limit = 3): Promise<TrendingRoutine[]> {
+  if (!supabase) return [];
+
+  const { data: counts } = await supabase.rpc("get_trending_routines", { limit_count: limit });
+  if (!counts || counts.length === 0) return [];
+
+  const ids = counts.map((c) => c.routine_id);
+  const { data: routines } = await supabase
+    .from("routines")
+    .select("id, title, video:videos!inner ( duration_seconds ), routine_items ( count )")
+    .in("id", ids);
+  if (!routines) return [];
+
+  const rows = routines as unknown as TrendingRoutineRow[];
+  const byId = new Map(rows.map((r) => [r.id, r]));
+
+  return counts
+    .map((c, i) => {
+      const r = byId.get(c.routine_id);
+      if (!r) return null;
+      const itemCount = r.routine_items[0]?.count ?? 0;
+      const durationMin = r.video?.duration_seconds ? Math.round(r.video.duration_seconds / 60) : 0;
+      return {
+        routineId: r.id,
+        rank: i + 1,
+        name: r.title,
+        meta: `${itemCount} 종목 · ${durationMin}분`,
+        count: Number(c.workout_count),
+      };
+    })
+    .filter((r): r is TrendingRoutine => r !== null);
+}
+
+export interface TrendingExercise {
+  name: string;
+  count: number;
+}
+
+export async function getTrendingExercises(limit = 6): Promise<TrendingExercise[]> {
+  if (!supabase) return [];
+
+  const { data: counts } = await supabase.rpc("get_trending_exercises", { limit_count: limit });
+  if (!counts || counts.length === 0) return [];
+
+  const ids = counts.map((c) => c.exercise_id);
+  const { data: exercises } = await supabase.from("exercises").select("id, name_ko").in("id", ids);
+  if (!exercises) return [];
+
+  const nameById = new Map(exercises.map((e) => [e.id, e.name_ko]));
+  return counts
+    .map((c) => ({ name: nameById.get(c.exercise_id) ?? "", count: Number(c.set_count) }))
+    .filter((e) => e.name !== "");
+}
+
+export interface CuratorPick {
+  routineId: string;
+  name: string;
+  curator: string;
+  meta: string;
+}
+
+interface CuratorPickRow {
+  id: string;
+  title: string;
+  video: { athlete: { name: string } | null } | null;
+  routine_items: { count: number }[];
+}
+
+export async function getCuratorPicks(limit = 3): Promise<CuratorPick[]> {
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from("routines")
+    .select("id, title, video:videos!inner ( athlete:athletes!inner ( name ) ), routine_items ( count )")
+    .eq("status", "published")
+    .eq("is_featured", true)
+    .limit(limit);
+  if (!data) return [];
+
+  const rows = data as unknown as CuratorPickRow[];
+  return rows.map((r) => ({
+    routineId: r.id,
+    name: r.title,
+    curator: r.video?.athlete?.name ?? "알 수 없음",
+    meta: `${r.routine_items[0]?.count ?? 0} 종목`,
+  }));
+}

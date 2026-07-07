@@ -1,19 +1,5 @@
 import type { CuratorRow } from "@/types/domain";
 
-export const detailTimes = [192, 465, 740, 1018, 1290, 1510, 1784, 1982];
-
-// 홈 화면의 "오늘의 추천" 종목 목록 미리보기용 (Home은 아직 mock — 다음 우선순위에서 실 데이터로 교체 예정).
-export const homeExerciseDefs = [
-  { name: "인클라인 바벨 벤치프레스", part: "가슴", equip: "바벨" },
-  { name: "플랫 덤벨 프레스", part: "가슴", equip: "덤벨" },
-  { name: "시티드 숄더 프레스", part: "어깨", equip: "머신" },
-  { name: "인클라인 덤벨 플라이", part: "가슴", equip: "덤벨" },
-  { name: "레터럴 레이즈", part: "어깨", equip: "덤벨" },
-  { name: "케이블 크로스오버", part: "가슴", equip: "케이블" },
-  { name: "오버헤드 트라이셉 익스텐션", part: "삼두", equip: "케이블" },
-  { name: "트라이셉 푸시다운", part: "삼두", equip: "케이블" },
-];
-
 export const initialCurator: CuratorRow[] = [
   { id: 1, name: "인클라인 바벨 벤치프레스", t: 192, confirmed: true },
   { id: 2, name: "플랫 덤벨 프레스", t: 465, confirmed: true },
@@ -32,21 +18,7 @@ export const muscleCardDefs = [
   { name: "삼두", hit: "arm", cur: 9, max: 18 },
 ] as const;
 
-export const trendRoutines = [
-  { rank: "1", name: "풀 데이 — 등 두께", meta: "9 종목 · 68분", count: "2.4k" },
-  { rank: "2", name: "레그 데이 — 대퇴사두", meta: "7 종목 · 55분", count: "1.9k" },
-  { rank: "3", name: "푸시 데이 — 상체 볼륨", meta: "8 종목 · 62분", count: "1.2k" },
-];
-
-export const trendExercises = [
-  { name: "바벨 벤치프레스", count: "3.4k" },
-  { name: "데드리프트", count: "2.9k" },
-  { name: "스쿼트", count: "2.7k" },
-  { name: "풀업", count: "2.1k" },
-  { name: "오버헤드 프레스", count: "1.6k" },
-  { name: "바벨 로우", count: "1.4k" },
-];
-
+// Home의 curatorPicks 실 쿼리(getCuratorPicks)가 로딩되기 전 초기 표시용 폴백.
 export const curatorPicks = [
   { name: "풀 데이 — 등 두께", curator: "CBUM", meta: "9 종목" },
   { name: "레그 데이 — 대퇴사두", curator: "Larry Wheels", meta: "7 종목" },
