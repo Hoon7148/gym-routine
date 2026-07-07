@@ -48,6 +48,18 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
    이 샌드박스는 Docker 데몬 권한이 없어 `supabase start`(로컬 스택)를 못 띄우고,
    사용자 계정으로 원격 프로젝트를 새로 만들어야 해서 아직 URL/anon key 연결
    전임. 그때까지는 아래 "Supabase 프로젝트 연결하기" 대로 세팅하면 됨.
+   - **2026-07-07 업데이트**: 사용자가 `gym-routine` Supabase 프로젝트를 만들고
+     Project URL/anon key를 줘서 이 세션에서 `.env.local`(git에 안 올라감,
+     로컬 전용)에 설정하고 Explore 화면으로 실제 요청이 나가는 것까지 확인함.
+     **다만 마이그레이션/seed.sql은 아직 실행 안 함** — 사용자가 아직 SQL
+     Editor에서 안 돌렸다고 확인(아래 "Supabase 프로젝트 연결하기" 3번 필요).
+   - ⚠️ **이 샌드박스 환경은 `supabase.co`로 나가는 아웃바운드 네트워크 자체가
+     조직 정책으로 차단됨**(curl/브라우저 둘 다 `ERR_TUNNEL_CONNECTION_FAILED`,
+     프록시 상태(`$HTTPS_PROXY/__agentproxy/status`)의 `recentRelayFailures`에
+     `<project-ref>.supabase.co:443` 403 거부 기록 확인). 즉 이 환경에서는
+     실제 데이터 연동을 절대 검증할 수 없음 — **사용자 컴퓨터에서 로컬로
+     테스트하는 게 유일한 방법**(아래 "로컬 컴퓨터에서 테스트하기" 참고).
+     다음 세션에서도 이 환경 그대로면 똑같이 막힐 것이므로 재시도하지 말 것.
    - 완료: `routines.split_type` 컬럼 추가(`0003_routine_split_type.sql`),
      `src/types/database.ts` 스키마에 맞게 수동 작성, `src/lib/queries.ts`
      쿼리 레이어, Explore/RoutineDetail을 실제 Supabase 쿼리로 교체,
@@ -113,6 +125,18 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
 6. 내정보 화면에서 이메일 입력 후 "이메일로 로그인 링크 받기" → 실제 받은
    편지함에서 로그인 링크 클릭 → 앱으로 돌아왔을 때 세션이 잡혀서 이메일과
    로그아웃 버튼이 보이는지 확인.
+
+## 로컬 컴퓨터에서 테스트하기 (사용자가 할 일)
+
+이 샌드박스는 `supabase.co`를 차단하기 때문에, Supabase 연동/로그인 실동작
+확인은 본인 컴퓨터에서 해야 함.
+
+1. `git checkout claude/continue-here-docs-vllt9h && git pull`
+2. `npm install`
+3. 저장소 루트에 `.env.local` 생성(git에 커밋 안 됨, 컴퓨터마다 직접 만들어야
+   함) — 값은 `.env.example` 형식대로, Supabase 대시보드 Project Settings →
+   API 에서 확인한 실제 Project URL/anon key로 채움
+4. `npm run dev` → Explore/RoutineDetail/내정보(로그인) 순서로 확인
 
 ## 카카오 로그인 설정하기 (사용자가 할 일)
 
