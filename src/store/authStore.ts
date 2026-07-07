@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 interface AuthState {
   session: Session | null;
   sendMagicLink: (email: string) => Promise<{ error: string | null }>;
+  signInWithKakao: () => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
@@ -15,6 +16,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: window.location.origin },
+    });
+    return { error: error?.message ?? null };
+  },
+  signInWithKakao: async () => {
+    if (!supabase) return { error: "Supabase가 아직 설정되지 않았어요." };
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: { redirectTo: window.location.origin },
     });
     return { error: error?.message ?? null };
   },

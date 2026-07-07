@@ -6,6 +6,7 @@ export function Profile() {
   const goCurator = useAppStore((s) => s.goCurator);
   const session = useAuthStore((s) => s.session);
   const sendMagicLink = useAuthStore((s) => s.sendMagicLink);
+  const signInWithKakao = useAuthStore((s) => s.signInWithKakao);
   const signOut = useAuthStore((s) => s.signOut);
 
   const [email, setEmail] = useState("");
@@ -24,6 +25,14 @@ export function Profile() {
     }
   }
 
+  async function handleKakaoLogin() {
+    const { error } = await signInWithKakao();
+    if (error) {
+      setErrorMessage(error);
+      setStatus("error");
+    }
+  }
+
   return (
     <div className="scr pt-2 px-5 pb-[120px]">
       {session ? (
@@ -39,7 +48,24 @@ export function Profile() {
       ) : (
         <div className="bg-card border border-white/[0.07] rounded-2xl p-4 mb-6">
           <div className="text-[15px] font-bold text-text mb-1">로그인</div>
-          <div className="text-xs text-text-dim mb-3">이메일로 로그인 링크를 보내드려요. 비밀번호는 필요 없어요.</div>
+          <div className="text-xs text-text-dim mb-3">카카오 또는 이메일로 로그인할 수 있어요.</div>
+
+          <button
+            onClick={handleKakaoLogin}
+            className="w-full flex items-center justify-center gap-1.5 bg-[#FEE500] text-[#191919] rounded-xl py-2.5 text-sm font-bold mb-3"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 3C6.48 3 2 6.48 2 10.78c0 2.72 1.8 5.11 4.52 6.48-.2.72-.72 2.6-.83 3-.13.5.18.5.38.36.16-.11 2.5-1.7 3.52-2.39.46.07.94.1 1.41.1 5.52 0 10-3.48 10-7.78S17.52 3 12 3z" fill="#191919" />
+            </svg>
+            카카오로 계속하기
+          </button>
+
+          <div className="flex items-center gap-2.5 mb-3">
+            <div className="flex-1 h-px bg-white/[0.08]" />
+            <span className="text-[11px] text-text-faint">또는</span>
+            <div className="flex-1 h-px bg-white/[0.08]" />
+          </div>
+
           <input
             type="email"
             value={email}
@@ -52,7 +78,7 @@ export function Profile() {
             disabled={!email || status === "sending"}
             className="w-full bg-accent text-white rounded-xl py-2.5 text-sm font-bold disabled:opacity-50"
           >
-            {status === "sending" ? "보내는 중…" : "매직링크 보내기"}
+            {status === "sending" ? "보내는 중…" : "이메일로 로그인 링크 받기"}
           </button>
           {status === "sent" && (
             <div className="text-xs text-success mt-2.5">이메일을 확인해서 로그인 링크를 눌러주세요.</div>
