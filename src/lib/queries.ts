@@ -271,6 +271,18 @@ export async function getRoutineDetail(routineId: string): Promise<RoutineDetail
   };
 }
 
+// ── 큐레이터 도구: routine_items.timestamp_seconds 실제 수정 ──
+// 0006 마이그레이션으로 routines.curator_id = auth.uid()인 사용자만 UPDATE 가능.
+
+export async function updateRoutineItemTimestamp(routineItemId: string, timestampSeconds: number): Promise<boolean> {
+  if (!supabase) return false;
+  const { error } = await supabase
+    .from("routine_items")
+    .update({ timestamp_seconds: timestampSeconds })
+    .eq("id", routineItemId);
+  return !error;
+}
+
 // ── Home 화면: 오늘 트렌딩 + 콜드스타트 폴백 ──
 // workouts/workout_sets는 RLS로 본인 행만 조회되므로, 전체 유저 집계는
 // 0005 마이그레이션의 SECURITY DEFINER 함수(get_trending_routines/exercises)로 받는다.

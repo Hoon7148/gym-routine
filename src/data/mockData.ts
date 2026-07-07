@@ -1,16 +1,3 @@
-import type { CuratorRow } from "@/types/domain";
-
-export const initialCurator: CuratorRow[] = [
-  { id: 1, name: "인클라인 바벨 벤치프레스", t: 192, confirmed: true },
-  { id: 2, name: "플랫 덤벨 프레스", t: 465, confirmed: true },
-  { id: 3, name: "시티드 숄더 프레스", t: 740, confirmed: true },
-  { id: 4, name: "인클라인 덤벨 플라이", t: 1018, confirmed: false },
-  { id: 5, name: "레터럴 레이즈", t: 1290, confirmed: false },
-  { id: 6, name: "케이블 크로스오버", t: 1510, confirmed: false },
-  { id: 7, name: "오버헤드 트라이셉 익스텐션", t: 1784, confirmed: false },
-  { id: 8, name: "트라이셉 푸시다운", t: 1982, confirmed: false },
-];
-
 export const muscleCardDefs = [
   { name: "전면 삼각근", hit: "delt", cur: 8, max: 18 },
   { name: "가슴", hit: "pec", cur: 12, max: 20 },
