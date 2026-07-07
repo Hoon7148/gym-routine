@@ -137,8 +137,23 @@ export async function getOrCreateWorkout(userId: string, routineId: string): Pro
     .insert({ user_id: userId, routine_id: routineId })
     .select("id")
     .single();
-  if (error || !created) return null;
-  return created.id;
+  if (!error) return created.id;
+
+  // 23505 = unique_violation. idx_workouts_one_open_per_routine에 걸렸다는 건
+  // 동시에 호출된 다른 요청이 이미 진행 중 workout을 만들었다는 뜻 — 그걸 그대로 씀
+  // (예: React StrictMode의 effect 이중 실행으로 이 함수가 겹쳐 호출되는 경우).
+  if (error.code === "23505") {
+    const { data: raced } = await supabase
+      .from("workouts")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("routine_id", routineId)
+      .is("completed_at", null)
+      .limit(1)
+      .maybeSingle();
+    return raced?.id ?? null;
+  }
+  return null;
 }
 
 interface RoutineItemWithExercise {
