@@ -63,8 +63,14 @@ React 컴포넌트로 이식 완료. 6개 화면 전부 포팅됨:
    - `npx tsc -b --noEmit` / `npx eslint .` / `npm run build` 모두 클린.
      Playwright로 env 미설정 상태에서 크래시 없음, Home 정상 렌더 확인.
      **실제 Supabase 프로젝트에 대고는 아직 테스트 못 함** — 세팅 후 확인 필요.
-3. **PWA 아이콘** — `vite.config.ts`의 manifest에 아이콘 파일 경로가 없음
-   (futsal-app 것 그대로 안 가져옴). 아이콘 세트 준비 필요.
+3. ~~**PWA 아이콘**~~ — 완료 (2026-07-06). Explore 화면 '푸시' 카테고리 아이콘의
+   바벨 글리프를 재사용해 다크 배경(`#1a1a1a`) + 액센트 레드(`#e5484d`) 아이콘
+   제작. `public/`에 `pwa-192x192.png`, `pwa-512x512.png`,
+   `pwa-maskable-512x512.png`(safe-zone 계산해서 글리프 배치), `apple-touch-icon.png`,
+   `favicon.png` 추가. `vite.config.ts`의 `manifest.icons` + `includeAssets`,
+   `index.html`의 favicon/apple-touch-icon `<link>` 연결. 빌드 후
+   `dist/manifest.webmanifest`에 아이콘 3종 정상 포함 확인, Playwright로 favicon
+   200 응답(404 없음) 확인.
 4. **인증** — 로그인 없음. `준경`/아바타 이니셜이 하드코딩. 이게 있어야 Record/
    Curator/Profile도 Supabase로 옮길 수 있음.
 
