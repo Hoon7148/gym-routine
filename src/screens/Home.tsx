@@ -52,7 +52,7 @@ export function Home() {
   }, []);
 
   const heroItemCount = routine?.itemCount ?? 8;
-  const heroDurationMin = routine?.durationMin ?? 62;
+  const heroDurationMin = routine ? routine.durationMin : 62;
   const heroInProgress = trendRoutines.find((t) => t.routineId === DEFAULT_ROUTINE_ID)?.count;
 
   const segBase = "flex-1 text-center py-2.5 rounded-lg text-[12.5px] font-bold transition-colors";
@@ -114,7 +114,7 @@ export function Home() {
             <div className="flex items-center gap-4 mt-3.5">
               <div><span className="mono text-[19px] font-extrabold text-text">{heroItemCount}</span><span className="text-xs text-text-dim"> 종목</span></div>
               <div className="w-px h-4 bg-white/10" />
-              <div><span className="mono text-[19px] font-extrabold text-text">{heroDurationMin}</span><span className="text-xs text-text-dim"> 분</span></div>
+              <div><span className="mono text-[19px] font-extrabold text-text">{heroDurationMin ?? "—"}</span><span className="text-xs text-text-dim"> 분</span></div>
               <div className="w-px h-4 bg-white/10" />
               <div><span className="mono text-[19px] font-extrabold text-text">{heroInProgress ?? "—"}</span><span className="text-xs text-text-dim"> 진행중</span></div>
             </div>

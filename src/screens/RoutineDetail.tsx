@@ -36,7 +36,7 @@ export function RoutineDetail() {
             <div className="text-[13px] text-text-dim">{routine.athleteName} 유튜브 루틴</div>
             <div className="flex items-center gap-[18px] mt-4 pb-[18px] border-b border-white/[0.07]">
               <div><span className="mono text-xl font-extrabold text-text">{routine.itemCount}</span><span className="text-xs text-text-dim"> 종목</span></div>
-              <div><span className="mono text-xl font-extrabold text-text">{routine.durationMin}</span><span className="text-xs text-text-dim"> 분</span></div>
+              <div><span className="mono text-xl font-extrabold text-text">{routine.durationMin ?? "—"}</span><span className="text-xs text-text-dim"> 분</span></div>
               <div><span className="mono text-xl font-extrabold text-text">—</span><span className="text-xs text-text-dim"> 명 진행</span></div>
             </div>
             <div className="text-[11.5px] text-text-faint leading-snug mt-3.5 mb-1">세트·무게는 직접 설정 — 순서와 구성만 제공합니다.</div>

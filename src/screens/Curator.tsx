@@ -57,7 +57,7 @@ export function Curator() {
   }
 
   const confCount = confirmedIds.size;
-  const totalDurationSec = routine ? routine.durationMin * 60 : 2400;
+  const totalDurationSec = routine?.durationMin ? routine.durationMin * 60 : 2400;
 
   return (
     <div className="scr pt-2 px-5 pb-[120px]">

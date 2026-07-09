@@ -24,6 +24,28 @@ Supabase 데이터/쓰기로 연결 완료**:
 (세트 기록/타임스탬프 값)만 영구 저장하고 완료 여부는 그때그때의 UI
 편의로 처리.
 
+## 콘텐츠 — 실제 선수 루틴 2차 배치 추가
+
+CBUM/Larry Wheels/Jeff Nippard 3명(전부 가짜 youtube_id) 외에, 웹 검색으로 찾은
+**진짜 선수·진짜 영상·진짜 종목 순서**를 추가함:
+
+- **Nick Walker — 백 데이** (9종목): [실제 영상](https://www.youtube.com/watch?v=O4_9pYvhXbA)
+- **Derek Lunsford — 체스트 데이** (5종목): [실제 영상](https://www.youtube.com/watch?v=WHs8kjCEfes)
+- **Derek Lunsford — 레그 데이** (7종목): [실제 영상](https://www.youtube.com/watch?v=sxcmf0vRn_0)
+
+출처: 각 선수 인터뷰/기사(BarBend, SET FOR SET, Breaking Muscle 등, 종목 순서는
+글로 이미 공개된 정보). **`timestamp_seconds`와 `duration_seconds`는 전부 NULL** —
+실제 영상 러닝타임/타임코드를 모르는 채로 숫자를 지어내지 않기로 함. 화면에서
+null은 전부 "—"로 안전하게 표시되도록 `queries.ts`/`Home.tsx`/`RoutineDetail.tsx`
+손봄(`minutesOrNull` 헬퍼 추가).
+
+**다음에 할 일**: 실제 영상을 본 사람이 큐레이터 도구(`내정보 → 큐레이터 도구`)에서
+저 3개 루틴의 진짜 타임스탬프를 채워 넣으면 완성됨 — 지금 그 화면은
+`DEFAULT_ROUTINE_ID`(CBUM 푸시 데이) 하나에 고정돼 있어서, 다른 루틴을 큐레이팅
+하려면 Curator 화면에 루틴 선택 기능을 먼저 추가해야 함.
+
+파일: `supabase/seed_batch2.sql` (기존 `seed.sql`은 안 건드림, 배치별로 분리).
+
 ## 인프라
 
 - `src/store/appStore.ts` (Zustand) — 화면 전환 + 필터 상태만 남음

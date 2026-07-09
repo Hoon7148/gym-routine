@@ -31,6 +31,12 @@ export const SPLIT_TYPE_KO_TO_EN: Record<string, SplitType> = {
   전신: "full_body",
 };
 
+// 영상 길이를 모르면(예: 새로 추가한 실제 영상의 정확한 러닝타임을 아직 못 구한 경우)
+// 0분으로 지어내지 않고 null로 둔다 — 화면에서 "—"로 정직하게 표시.
+function minutesOrNull(seconds: number | null): number | null {
+  return seconds ? Math.round(seconds / 60) : null;
+}
+
 // supabase-js는 임베디드 조인(video:videos(...))의 결과 타입을 Database.Relationships
 // 메타데이터 없이는 정확히 추론하지 못하므로, 실제 PostgREST 응답 형태를 손으로 명시하고
 // 쿼리 결과를 이 타입으로 캐스팅한다.
@@ -68,11 +74,12 @@ export async function listExploreRoutines(bodyPartKo: string, categoryKo: string
 
   return (data as unknown as ExploreRoutineRow[]).map((r) => {
     const itemCount = r.routine_items[0]?.count ?? 0;
-    const durationMin = r.video?.duration_seconds ? Math.round(r.video.duration_seconds / 60) : 0;
+    const durationMin = minutesOrNull(r.video?.duration_seconds ?? null);
+    const durationLabel = durationMin !== null ? `${durationMin}분 · ` : "";
     return {
       id: r.id,
       name: r.title,
-      meta: `${itemCount} 종목 · ${durationMin}분 · ${r.video?.athlete?.name ?? "알 수 없음"}`,
+      meta: `${itemCount} 종목 · ${durationLabel}${r.video?.athlete?.name ?? "알 수 없음"}`,
     };
   });
 }
@@ -102,7 +109,7 @@ export interface RoutineDetail {
   athleteName: string;
   bodyPartLabel: string;
   itemCount: number;
-  durationMin: number;
+  durationMin: number | null;
   items: RoutineDetailItem[];
 }
 
@@ -266,7 +273,7 @@ export async function getRoutineDetail(routineId: string): Promise<RoutineDetail
     athleteName: routine.video?.athlete?.name ?? "알 수 없음",
     bodyPartLabel: BODY_PART_EN_TO_KO[routine.body_part],
     itemCount: items.length,
-    durationMin: routine.video?.duration_seconds ? Math.round(routine.video.duration_seconds / 60) : 0,
+    durationMin: minutesOrNull(routine.video?.duration_seconds ?? null),
     items,
   };
 }
@@ -323,12 +330,13 @@ export async function getTrendingRoutines(limit = 3): Promise<TrendingRoutine[]>
       const r = byId.get(c.routine_id);
       if (!r) return null;
       const itemCount = r.routine_items[0]?.count ?? 0;
-      const durationMin = r.video?.duration_seconds ? Math.round(r.video.duration_seconds / 60) : 0;
+      const durationMin = minutesOrNull(r.video?.duration_seconds ?? null);
+      const meta = durationMin !== null ? `${itemCount} 종목 · ${durationMin}분` : `${itemCount} 종목`;
       return {
         routineId: r.id,
         rank: i + 1,
         name: r.title,
-        meta: `${itemCount} 종목 · ${durationMin}분`,
+        meta,
         count: Number(c.workout_count),
       };
     })
